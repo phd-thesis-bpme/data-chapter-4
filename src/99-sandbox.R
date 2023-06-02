@@ -30,4 +30,7 @@ ggplot() +
   geom_sf(data = stops, size = 0.3) +
   geom_sf(data = bam_coords, color = "blue", size = 0.3)
 
+################################################################
+
+library(bbsBayes2)
 
