@@ -29,6 +29,45 @@ bbs_species <- load_bbs_data()$species
 
 ####### Main Code #################################
 
+# Remove all species that are not birds of North America, unids, sps, slashes, etc
+to_remove <- c("Unidentified Warbler", "Unidentified Woodpecker", "Unidentified bird",
+               "Unidentified Thrush", "Unidentified Black-backed / American Three-toed Woodpecker",
+               "Unidentified Goldeneye", "Unidentified Vireo", "Unidentified Sapsucker",
+               "Unidentified Flycatcher", "Unidentified Duck", "Unidentified Gull",
+               "Unidentified Swallow", "Unidentified Yellowlegs", "Unidentified Blackbird",
+               "Unidentified Sparrow", "Unidentified Tern", "NONE", "Unidentified Dabbling Duck",
+               "Unidentified Passerine", "Unidentified Redpoll", "Hawaiian Duck", "Bahama Woodstar",
+               "Wattled Jacana", "Unidentified Owl", "Chinese Pond-Heron", "Unidentified Raptor",
+               "Red Squirrel", "Unidentified signal", "Arctic Ground Squirrel", "Unidentified Grebe",
+               "Unidentified Kingbird", "Unidentified Shorebird", "Unidentified goose",
+               "Wedge-tailed Sabrewing", "Unidentified Blue-winged / Golden-winged Warbler",
+               "Boreal Chorus Frog", "Unidentified Hawk", "Solitary Vireo (Blue-headed / Cassin's / Plumbeous)",
+               "Unidentified Trill", "Canadian Toad", "Unidentified Wren","Unidentified Finch",
+               "Unidentified Loon","Wood Frog", "Unidentified Accipter Hawk","Unidentified Mammal",
+               "Wolf", "Common Snipe", "Greater Ani", "Common Swift", "Yellow-browed Warbler",
+               "Western Spindalis", "Narcissus Flycatcher", "Nutting's Flycatcher", 
+               "Rufous-winged Tanager", "Worthen's Sparrow", "Blue-crowned Chlorophonia",
+               "Colombian Crake", "Bachman's Warbler","Olivaceous Woodcreeper")
+
+bam_data <- bam_data[-which(bam_data$speciesCommonName %in% to_remove), ]
+# Fix Bald eagle to Bald Eagle
+bam_data[which(bam_data$speciesCommonName == "Bald eagle"), "speciesCommonName"] <- "Bald Eagle"
+
+# Change Lesser Snow Goose White-morph to Snow Goose
+bam_data[which(bam_data$speciesCommonName == "Lesser Snow Goose White-morph"), "speciesCommonName"] <- "Snow Goose"
+
+# Change Lesser Snow Goose White-morph to Snow Goose
+bam_data[which(bam_data$speciesCommonName == "Lesser Snow Goose White-morph"), "speciesCommonName"] <- "Snow Goose"
+
+# change myrtle warbler to yellow-rumped warbler
+bam_data[which(bam_data$speciesCommonName == "Myrtle Warbler"), "speciesCommonName"] <- "Yellow-rumped Warbler"
+
+# change Gray Jay to Canada Jay
+bam_data[which(bam_data$speciesCommonName == "Gray Jay"), "speciesCommonName"] <- "Canada Jay"
+
+# change Short-billed Gull to Mew Gull
+bam_data[which(bam_data$speciesCommonName == "Short-billed Gull"), "speciesCommonName"] <- "Mew Gull"
+
 # Create unique identifier to the location x date
 bam_data$site_date <- paste0(bam_data$location, ":", bam_data$date)
 
@@ -76,21 +115,45 @@ names(bam_counts) <- names(bbs_counts)
 bam_counts$species_total <- counts_by_sitedate$abundance
 bam_counts$route <- counts_by_sitedate$location
 bam_counts$year <- counts_by_sitedate$year
-species_not_found <- NULL
-for (i in 1:nrow(bam_counts))
+
+#' Species common name to AOU number. A bit tricky since AOU numbers account
+#' for a number of different subspecies and forms, some of which may not necessarily
+#' be specified with BAM data. What we can do is first make a dataframe that 
+#' relates species to AOU number. If a species does not have a 1-to-1 relationship
+#' with an AOU number right away, then may have to reiterate on those species
+#' and update their common name to match 1-to-1
+
+aou_num <- data.frame(Species = unique(counts_by_sitedate$speciesCommonName),
+                      aou = NA)
+for (i in 1:nrow(aou_num))
 {
-  aou <- search_species(species = counts_by_sitedate$speciesCommonName[i])$aou
-  if (length(aou) > 1)
-  {
-    if (counts_by_sitedate$speciesCommonName[i] %in% species_not_found == FALSE)
+    aou <- search_species(species = aou_num$Species[i])$aou
+    if (length(aou) == 1)
     {
-      species_not_found <- c(species_not_found, counts_by_sitedate$speciesCommonName[i])
+      aou_num$aou[i] <- aou
+    }else
+    {
+      next
     }
-  }else if (length(aou) == 0){
-    bam_counts$aou[i] <- NA
-  }else{
-    bam_counts$aou[i] <- aou
-  }
 }
+
+
+
+# species_not_found <- NULL
+# for (i in 1:nrow(bam_counts))
+# {
+#   aou <- search_species(species = counts_by_sitedate$speciesCommonName[i])$aou
+#   if (length(aou) > 1)
+#   {
+#     if (counts_by_sitedate$speciesCommonName[i] %in% species_not_found == FALSE)
+#     {
+#       species_not_found <- c(species_not_found, counts_by_sitedate$speciesCommonName[i])
+#     }
+#   }else if (length(aou) == 0){
+#     bam_counts$aou[i] <- NA
+#   }else{
+#     bam_counts$aou[i] <- aou
+#   }
+# }
 
 ####### Output ####################################
