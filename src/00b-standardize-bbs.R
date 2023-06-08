@@ -55,6 +55,77 @@ bbs_route_merged <- dplyr::left_join(stop_location[, c("rt_st",
                                      bbs_route, 
                                       by = "rt_st")
 
+bbs_route_merged <- bbs_route_merged[-which(is.na(bbs_route_merged$route)), ]
+# sort by routexstate combo, then year, then by stop number
+# i don't think this is actually necessary,but keeps bookkeeping a bit easier
+bbs_route_sorted <- bbs_route_merged[order(bbs_route_merged$rt_st,
+                                           bbs_route_merged$year,
+                                           bbs_route_merged$Stop), ]
+# keep track of index
+bbs_route_sorted$index <- seq(1, nrow(bbs_route_sorted))
+bbs_route_sorted$stop_start_time <- NA
+
+for (rs in unique(bbs_route_sorted$rt_st))
+{
+  temp1 <- bbs_route_sorted[which(bbs_route_sorted$rt_st == rs), ]
+  for (y in unique(temp1$year))
+  {
+    temp2 <- temp1[which(temp1$year == y), ]
+    n_stops <- nrow(temp2)
+    start_time <- as.POSIXct(sprintf("%04d",temp2$start_time[1]),
+                             format = "%H%M")
+    #subtract 3 minutes off the "end time" because we actually want the
+    # start time of the final stop
+    end_time <- as.POSIXct(sprintf("%04d",temp2$end_time[1]),
+                           format = "%H%M") - (3 * 60)
+    start_time_vector <- seq(from = start_time, to = end_time,
+                             length = n_stops)
+    indices <- temp2$index
+    
+    bbs_route_sorted[which(bbs_route_sorted$index %in% indices), "stop_start_time"] <- 
+      format(start_time_vector, "%H%M")
+  }
+}
+
+bbs_route_sorted$route <- paste0(bbs_route_sorted$route,
+                                 "-stop_",
+                                 bbs_route_sorted$Stop)
+
+# Now reorder this routes dataframe to match the BBS
+bbs_route_stops <- as.data.frame(bbs_route_sorted[, c("country_num",
+                                        "state_num",
+                                        "route",
+                                        "route_name",
+                                        "active",
+                                        "POINT_Y",
+                                        "POINT_X",
+                                        "bcr",
+                                        "route_type_id",
+                                        "route_type_detail_id",
+                                        "route_data_id",
+                                        "rpid",
+                                        "year",
+                                        "month",
+                                        "day",
+                                        "obs_n",
+                                        "total_spp",
+                                        "start_temp",
+                                        "end_temp",
+                                        "temp_scale",
+                                        "start_wind",
+                                        "end_wind",
+                                        "start_sky",
+                                        "end_sky",
+                                        "stop_start_time",
+                                        "end_time",
+                                        "assistant",
+                                        "quality_current_id",
+                                        "run_type",
+                                        "state",
+                                        "st_abrev",
+                                        "country")])
+names(bbs_route_stops) <- names(bbs_route)
+
 # Create long format so that each stop is its own row
 bbs_counts_long <- melt(bbs_counts,
                         id.vars = c("route_data_id", "country_num", "state_num",
@@ -63,5 +134,21 @@ bbs_counts_long <- melt(bbs_counts,
                         variable.name = "stop",
                         value.name = "species_total")
 
+bbs_counts_long$route <- paste0(bbs_counts_long$route,
+                                "-",
+                                bbs_counts_long$stop)
+bbs_counts_long <- as.data.frame(bbs_counts_long[, c("route_data_id",
+                                       "country_num",
+                                       "state_num",
+                                       "route",
+                                       "rpid",
+                                       "year",
+                                       "aou",
+                                       "species_total",
+                                       "bcr",
+                                       "unid_combined")])
 
 ####### Output ####################################
+
+saveRDS(bbs_route_stops, file = "data/generated/bbs_sites.RDS")
+saveRDS(bbs_counts_long, file = "data/generated/bbs_counts.RDS")
