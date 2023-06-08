@@ -90,17 +90,17 @@ bam_sites_bbs$latitude <- bam_sites$latitude
 bam_sites_bbs$longitude <- bam_sites$longitude
 bam_sites_bbs$route <- bam_sites$location
 bam_sites_bbs$obs_n <- bam_sites$observer
-bam_sites_bbs$year <- bam_sites$year #format(dates, "%Y")
-bam_sites_bbs$month <- bam_sites$month #format(dates, "%m")
-bam_sites_bbs$day <- bam_sites$day# format(dates, "%d")
-bam_sites_bbs$start_time <- bam_sites$start_time # format(dates, "%H%M")
+bam_sites_bbs$year <- as.numeric(bam_sites$year) #format(dates, "%Y")
+bam_sites_bbs$month <- as.numeric(bam_sites$month) #format(dates, "%m")
+bam_sites_bbs$day <- as.numeric(bam_sites$day) # format(dates, "%d")
+bam_sites_bbs$start_time <- as.numeric(bam_sites$start_time) # format(dates, "%H%M")
 # Infer end time based on durationMethod
 dur_method <- strsplit(bam_sites$durationMethod, "-")
 duration <- unlist(lapply(dur_method, tail, n = 1L))
 duration_num <- as.numeric(gsub("([0-9]+).*$", "\\1", duration))
-bam_sites_bbs$end_time <- format(as.POSIXct(bam_sites$date, format = "%Y-%m-%d %H:%M:%S") + 
+bam_sites_bbs$end_time <- as.numeric(format(as.POSIXct(bam_sites$date, format = "%Y-%m-%d %H:%M:%S") + 
                                    (duration_num * 60), 
-                                 "%H%M")
+                                 "%H%M"))
 
 # Create a dataframe that sums counts for each species for a given site x date
 counts_by_sitedate <- aggregate(abundance ~ site_date + speciesCommonName + location + year,
@@ -114,7 +114,7 @@ names(bam_counts) <- names(bbs_counts)
 #populate this data frame
 bam_counts$species_total <- counts_by_sitedate$abundance
 bam_counts$route <- counts_by_sitedate$location
-bam_counts$year <- counts_by_sitedate$year
+bam_counts$year <- as.numeric(counts_by_sitedate$year)
 
 #' Species common name to AOU number. A bit tricky since AOU numbers account
 #' for a number of different subspecies and forms, some of which may not necessarily
