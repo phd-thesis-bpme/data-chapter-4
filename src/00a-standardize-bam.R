@@ -123,11 +123,11 @@ bam_counts$year <- counts_by_sitedate$year
 #' with an AOU number right away, then may have to reiterate on those species
 #' and update their common name to match 1-to-1
 
-aou_num <- data.frame(Species = unique(counts_by_sitedate$speciesCommonName),
+aou_num <- data.frame(speciesCommonName = unique(counts_by_sitedate$speciesCommonName),
                       aou = NA)
 for (i in 1:nrow(aou_num))
 {
-    aou <- search_species(species = aou_num$Species[i])$aou
+    aou <- search_species(species = aou_num$speciesCommonName[i])$aou
     if (length(aou) == 1)
     {
       aou_num$aou[i] <- aou
@@ -137,23 +137,21 @@ for (i in 1:nrow(aou_num))
     }
 }
 
-
-
-# species_not_found <- NULL
-# for (i in 1:nrow(bam_counts))
-# {
-#   aou <- search_species(species = counts_by_sitedate$speciesCommonName[i])$aou
-#   if (length(aou) > 1)
-#   {
-#     if (counts_by_sitedate$speciesCommonName[i] %in% species_not_found == FALSE)
-#     {
-#       species_not_found <- c(species_not_found, counts_by_sitedate$speciesCommonName[i])
-#     }
-#   }else if (length(aou) == 0){
-#     bam_counts$aou[i] <- NA
-#   }else{
-#     bam_counts$aou[i] <- aou
-#   }
-# }
+counts_by_sitedate <- dplyr::left_join(counts_by_sitedate, aou_num,
+                                       by = "speciesCommonName")
+bam_counts$aou <- counts_by_sitedate$aou
+bam_counts <- bam_counts[, c("route_data_id",
+                             "country_num",
+                             "state_num",
+                             "route",
+                             "rpid",
+                             "year",
+                             "aou",
+                             "species_total",
+                             "bcr",
+                             "unid_combined")]
 
 ####### Output ####################################
+
+saveRDS(bam_sites_bbs, file = "data/generated/bam_sites.RDS")
+saveRDS(bam_counts, file = "data/generated/bam_counts.RDS")
