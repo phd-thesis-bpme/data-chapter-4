@@ -104,6 +104,12 @@ Putting everything together, we arrive at the following point-level model that i
 	\log(\lambda_{j,i,t,o}) = \log(a \hat{p} \hat{q})_{j,i,t,o} + \kappa_{j,i,t,o}^{(p)}\zeta + \kappa_{j,i,t,o}^{(q)}\xi + \alpha_i + \delta_{i,t} + \gamma_{i,t} + \psi_j + \omega_o + \eta I(o,j,t) + \epsilon_{j,i,t,o} + O(\zeta^2 + \xi^2) \\
 \end{equation}
 
+\section{Next Analysis Steps}
+\subsection{Develop Model Code}
+Given Equation \ref{bbs_varprop}, the next steps would be to write this model in Stan. This can likely be done relatively quickly as the spatially explicit base model is available through the R package \textit{bbsBayes2} \citep{edwards_bbsbayes_2021}, and so this pre-existing model file can easily be modified to include the above effects and offset.
+
+\subsection{Test Model}
+
 
 	\bibliography{refs}
 \end{document}
