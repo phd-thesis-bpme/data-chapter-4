@@ -1,7 +1,7 @@
 ####### Script Information ########################
 # Brandon P.M. Edwards
-# BBS Data Integration
-# <00b-standardize-bbs.R>
+# BBS Point Level
+# <00-standardize-bbs-counts.R>
 # Created June 2023
 # Last Updated June 2023
 
