@@ -32,7 +32,8 @@ mod_prepped <- prepare_data(strata_data = bbs_stratified,
 
 model_run <- run_model(model_data = mod_prepped,
                        output_basename = paste0(sp, "-route"),
-                       output_dir = "data/generated/model_runs")
+                       output_dir = "data/generated/model_runs",
+                       overwrite = TRUE)
 
 # This will likely be moved to its own analysis script at some point, easier to do all in one right now
 indices <- generate_indices(model_output = model_run)
