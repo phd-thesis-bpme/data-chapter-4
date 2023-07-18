@@ -12,7 +12,7 @@ library(bbsBayes2)
 ####### Set Constants #############################
 
 sp <- "Ovenbird"
-st <- "bbs_cws"
+st <- "latlong"
 
 ####### Read Data #################################
 
@@ -26,20 +26,22 @@ bbs_data <- list(birds = bbs_counts,
                  routes = bbs_sites,
                  species = bbs_species)
 
-bbs_stratified <- stratify(by = st, species = sp, data_custom = bbs_data)
+bbs_stratified <- stratify(by = st, level = "stop", species = sp, data_custom = bbs_data)
 
 # Limit analysis to only Canada
 bbs_stratified$routes_strata <- 
   bbs_stratified$routes_strata[which(bbs_stratified$routes_strata$country == "CA"), ]
 
 mod_prepped <- prepare_data(strata_data = bbs_stratified,
-                            min_year = 1990) %>%
+                            min_year = 1990,
+                            min_n_routes = 1) %>%
   prepare_spatial(strata_map = load_map(st)) %>%
   prepare_model(model = "gamye", model_variant = "spatial")
 
 model_run <- run_model(model_data = mod_prepped,
-                       output_basename = paste0(sp, "-route"),
-                       output_dir = "data/generated/model_runs")
+                       output_basename = paste0(sp, "-point"),
+                       output_dir = "data/generated/model_runs",
+                       overwrite = TRUE)
 
 # This will likely be moved to its own analysis script at some point, easier to do all in one right now
 indices <- generate_indices(model_output = model_run)
@@ -51,49 +53,10 @@ trend_map <- plot_map(trends)
 
 ####### Output ####################################
 
-pdf(file = paste0("output/plots/indices_route_", sp, ".pdf"))
+pdf(file = paste0("output/plots/indices_point_", sp, ".pdf"))
 print(p)
 dev.off()
 
-pdf(file = paste0("output/plots/trends_route_", sp, ".pdf"))
+pdf(file = paste0("output/plots/trends_point_", sp, ".pdf"))
 print(trend_map)
 dev.off()
-
-
-
-
-
-
-
-trends_bbs <- stratify(by = "latlong", species = sp,
-                       level = "stop",
-                       data_custom = bbs_data) %>%
-  prepare_data() %>%
-  prepare_model(model = "gamye") %>%
-  run_model(iter_warmup = 20, iter_sampling = 20, chains = 2, save_model = FALSE) %>%
-  generate_indices() %>%
-  generate_trends()
-saveRDS(trends_bbs, file = paste0("output/", sp, "_trends_bbs.RDS"))
-png(filename = paste0("output/", sp, "_bbs.png"), width = 6, height = 6, units = "in", res = 300)
-plot_map(trends_bbs)
-dev.off()
-
-message("Combined Model Starting...\n")
-# Package up bam data (will likely be done earlier)
-combined_data <- list(birds = rbind(bbs_counts, bam_counts),
-                 routes = rbind(bbs_sites, bam_sites),
-                 species = bbs_species)
-trends_combined <- stratify(by = "latlong", species = sp,
-                            level = "stop",
-                            data_custom = combined_data) %>%
-  prepare_data() %>%
-  prepare_model(model = "gamye") %>%
-  run_model(iter_warmup = 20, iter_sampling = 20, chains = 2, save_model = FALSE) %>%
-  generate_indices() %>%
-  generate_trends()
-saveRDS(trends_combined, file = paste0("output/", sp, "_trends_combined.RDS"))
-png(filename = paste0("output/", sp, "_combined.png"), width = 6, height = 6, units = "in", res = 300)
-plot_map(trends_combined)
-dev.off()
-
-####### Output ####################################
