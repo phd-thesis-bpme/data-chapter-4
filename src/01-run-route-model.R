@@ -20,9 +20,9 @@ st <- "latlong"
 
 bbs_stratified <- stratify(by = st, species = sp)
 
-# Limit analysis to only Canada
+# Limit analysis to only Ontario, Canada
 bbs_stratified$routes_strata <- 
-  bbs_stratified$routes_strata[which(bbs_stratified$routes_strata$country == "CA"), ]
+  bbs_stratified$routes_strata[which(bbs_stratified$routes_strata$st_abrev == "ON"), ]
 
 mod_prepped <- prepare_data(strata_data = bbs_stratified,
                             min_year = 1990,
@@ -31,6 +31,7 @@ mod_prepped <- prepare_data(strata_data = bbs_stratified,
   prepare_model(model = "gamye", model_variant = "spatial")
 
 model_run <- run_model(model_data = mod_prepped,
+                       iter_warmup = 20, iter_sampling = 20, chains = 2,
                        output_basename = paste0(sp, "-route"),
                        output_dir = "data/generated/model_runs",
                        overwrite = TRUE)

@@ -154,12 +154,12 @@ transformed parameters {
 
   for(s in 1:n_strata){
      smooth_pred[,s] = year_basis * transpose(beta[s,]);
-}
+  }
 
-for(s in 1:n_strata){
+  for(s in 1:n_strata){
     yeareffect[s,] = sdyear[s]*yeareffect_raw[s,];
-
-}
+  
+  }
 
 // intercepts and slopes
 
@@ -182,7 +182,7 @@ for(s in 1:n_strata){
 
 
 
-  }
+}
 
 
 
@@ -235,18 +235,18 @@ model {
 
 
 
-for(k in 1:n_knots_year){
-    beta_raw[,k] ~ icar_normal(n_strata, node1, node2);;
-}
+  for(k in 1:n_knots_year){
+      beta_raw[,k] ~ icar_normal(n_strata, node1, node2);;
+  }
    strata_raw ~ icar_normal(n_strata, node1, node2);
     //sum(strata_raw) ~ normal(0,0.001*n_strata);
 
-if(use_pois){
-  count_tr ~ poisson_log(E); //vectorized count likelihood with log-transformation
-}else{
-   count_tr ~ neg_binomial_2_log(E,phi); //vectorized count likelihood with log-transformation
-
-}
+  if(use_pois){
+    count_tr ~ poisson_log(E); //vectorized count likelihood with log-transformation
+  }else{
+     count_tr ~ neg_binomial_2_log(E,phi); //vectorized count likelihood with log-transformation
+  
+  }
 
 }
 
@@ -262,16 +262,16 @@ if(use_pois){
    real adj;
 
   if(calc_log_lik){
-  // potentially useful for estimating loo-diagnostics, such as looic
-  if(use_pois){
-  for(i in 1:n_counts){
-   log_lik[i] = poisson_log_lpmf(count_tr[i] | E[i]);
-   }
-  }else{
-   for(i in 1:n_counts){
-   log_lik[i] = neg_binomial_2_log_lpmf(count_tr[i] | E[i] , phi);
-   }
-  }
+    // potentially useful for estimating loo-diagnostics, such as looic
+    if(use_pois){
+    for(i in 1:n_counts){
+     log_lik[i] = poisson_log_lpmf(count_tr[i] | E[i]);
+     }
+    }else{
+     for(i in 1:n_counts){
+      log_lik[i] = neg_binomial_2_log_lpmf(count_tr[i] | E[i] , phi);
+     }
+    }
   }
 
   if(calc_CV){
