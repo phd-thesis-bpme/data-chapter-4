@@ -72,7 +72,7 @@ Although Equation \ref{bbs_napops_novar} now includes the detectability offset a
 	\log(apq) = log(a\hat{p} \hat{q}) + \kappa^{(p)}\zeta + O(\zeta^2) + \kappa^{(q)}\xi + O(\xi^2).
 \end{equation}
 	 
-\par Here, $log(a \hat{p} \hat{q})$ is the log offset term with the estimated availability $\hat{p}$ and perceptibility $\hat{q}$ based on maximum likelihood methods from NA-POPS. We also introduce two additional sets of terms: $\kappa^{(p)}\zeta + O(\zeta^2)$ and $\kappa^{(q)}\xi + O(\xi^2)$, which are the corresponding uncertainty propagation terms for availability and perceptibility, respectively.  The parameters $zeta$ and $xi$ are basis coefficients for the variance propagation for $\hat{p}$ and $\hat{q}$, respectively, and play a similar role to that played by the basis coefficients in the GAM model \citep{bravington_variance_2021}. In a Bayesian context, we have that $\zeta \sim N(\boldsymbol{0}, \boldsymbol{V_p})$, where $V_p$ is the covariance matrix for $p(\theta)$ as determined through MLE methods; and $\xi \sim N(\boldsymbol{V_q})$, where $V_q$ is the covariance matrix for $q(\theta)$ as determined through MLE methods.
+\par Here, $log(a \hat{p} \hat{q})$ is the log offset term with the estimated availability $\hat{p}$ and perceptibility $\hat{q}$ from NA-POPS. We also introduce two additional sets of terms: $\kappa^{(p)}\zeta + O(\zeta^2)$ and $\kappa^{(q)}\xi + O(\xi^2)$, which are the corresponding uncertainty propagation terms for availability and perceptibility, respectively.  The parameters $\zeta$ and $\xi$ are basis coefficients for the variance propagation for $\hat{p}$ and $\hat{q}$, respectively, and play a similar role to that played by the basis coefficients in the GAM model \citep{bravington_variance_2021}. In a Bayesian context, we have that $\zeta \sim N(\boldsymbol{0}, \boldsymbol{V_p})$, where $V_p$ is the covariance matrix for $\hat{p}$, and $\xi \sim N(\boldsymbol{V_q})$, where $V_q$ is the covariance matrix for $\hat{q}$.
 
 The design matrices for $\zeta$ and $\xi$, denoted here as $\kappa^{(p)}$ and $\kappa^{(q)}$, are both vectors that are obtained by taking the first partial derivatives of the log probabilities $p$ and $q$ and evaluating these at $\theta = \hat{\theta}$, i.e. at its maximum likelihood estimation. From \citet{solymos_calibrating_2013}, we have that availability $p(\theta) = 1 - \exp\left\{-t\phi\right\}$, where $\phi = \exp\left(\theta\right)$ represents the cue rate for a given species, regressed against various factors that affect cue rate (such as ordinal day, time since sunrise, or their quadratic terms). If we have a vector {\boldmath$\beta$} of $S$ parameters and a design matrix $X$, we can set $\theta = X\boldsymbol{\beta}$, and find that the first partial derivative with respect to $\beta_s$, $s \in \left[0, S\right]$, and hence the $s$th entry of the design matrix $\kappa^{(p)}$, is given by
 \begin{equation*}\label{kappa_p}
@@ -104,11 +104,11 @@ Putting everything together, we arrive at the following point-level model that i
 	\log(\lambda_{j,i,t,o}) = \log(a \hat{p} \hat{q})_{j,i,t,o} + \kappa_{j,i,t,o}^{(p)}\zeta + \kappa_{j,i,t,o}^{(q)}\xi + \alpha_i + \delta_{i,t} + \gamma_{i,t} + \psi_j + \omega_o + \eta I(o,j,t) + \epsilon_{j,i,t,o} + O(\zeta^2 + \xi^2) \\
 \end{equation}
 
-\section{Next Analysis Steps}
-\subsection{Develop Model Code}
-Given Equation \ref{bbs_varprop}, the next steps would be to write this model in Stan. This can likely be done relatively quickly as the spatially explicit base model is available through the R package \textit{bbsBayes2} \citep{edwards_bbsbayes_2021}, and so this pre-existing model file can easily be modified to include the above effects and offset.
+%\section{Next Analysis Steps}
+%\subsection{Develop Model Code}
+%Given Equation \ref{bbs_varprop}, the next steps would be to write this model in Stan. This can likely be done relatively quickly as the spatially explicit base model is available through the R package \textit{bbsBayes2} \citep{edwards_bbsbayes_2021}, and so this pre-existing model file can easily be modified to include the above effects and offset.
 
-\subsection{Test Model}
+%\subsection{Test Model}
 
 
 	\bibliography{refs}
