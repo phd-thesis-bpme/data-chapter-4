@@ -65,6 +65,7 @@ bbs_route_sorted <- bbs_route_merged[order(bbs_route_merged$rt_st,
 bbs_route_sorted$index <- seq(1, nrow(bbs_route_sorted))
 bbs_route_sorted$stop_start_time <- NA
 
+# Infer start times for each stop in a route
 for (rs in unique(bbs_route_sorted$rt_st))
 {
   temp1 <- bbs_route_sorted[which(bbs_route_sorted$rt_st == rs), ]

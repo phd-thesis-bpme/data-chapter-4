@@ -12,8 +12,8 @@ library(napops)
 
 ####### Set Constants #############################
 
-sp <- "Connecticut Warbler"
-sp_code <- "CONW"
+sp <- "Ovenbird"
+sp_code <- "OVEN"
 st <- "latlong"
 
 ####### Read Data #################################
@@ -30,9 +30,9 @@ bbs_data <- list(birds = bbs_counts,
 
 bbs_stratified <- stratify(by = st, level = "stop", species = sp, data_custom = bbs_data)
 
-# Limit analysis to only Canada
+# Limit analysis to only Ontario, Canada
 bbs_stratified$routes_strata <- 
-  bbs_stratified$routes_strata[which(bbs_stratified$routes_strata$country == "CA"), ]
+  bbs_stratified$routes_strata[which(bbs_stratified$routes_strata$st_abrev == "ON"), ]
 
 #' Consider doing this stuff below (i.e. extracting the ordinal day and other
 #' detectability variables) within bbsBayes. There might be opportunity to add
