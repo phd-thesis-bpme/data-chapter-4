@@ -47,7 +47,7 @@ od <- as.POSIXlt(sprintf("%04d-%02d-%02d",
                         format = "%Y-%m-%d")$yday
 
 kappa_p <- avail_fd(species = sp_code,
-                    model = 3,
+                    model = "best",
                     od = od,
                     tssr = rep(0, times = length(od)),
                     pairwise = TRUE,
