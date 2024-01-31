@@ -25,7 +25,7 @@ bbs_stratified$routes_strata <-
   bbs_stratified$routes_strata[which(bbs_stratified$routes_strata$st_abrev == "ON"), ]
 
 mod_prepped <- prepare_data(strata_data = bbs_stratified,
-                            min_year = 1990,
+                            min_year = 2000,
                             min_n_routes = 1) %>%
   prepare_spatial(strata_map = load_map(st)) %>%
   prepare_model(model = "gamye", model_variant = "spatial")
