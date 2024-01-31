@@ -11,7 +11,7 @@ library(bbsBayes2)
 
 ####### Read Data #################################
 
-route <- readRDS("data/generated/model_runs/Ovenbird-route.RDS")
+route <- readRDS("data/generated/model_runs/Ovenbird-route.rds")
 point <- readRDS("data/generated/model_runs/Ovenbird-point.rds")
 
 ####### Indices and Trends ########################
