@@ -60,10 +60,26 @@ kappa_q <- percept_fd(species = sp_code,
                       pairwise = TRUE,
                       distance = rep(400, times = length(od)))
 
+p <- avail(species = sp_code,
+           model = "best",
+           od = od,
+           tssr = rep(0, times = length(od)),
+           pairwise = TRUE,
+           time = rep(3, times = length(od)))$p
+
+q <- percept(species = sp_code,
+             model = 2,
+             road = rep(TRUE, times = length(od)),
+             forest = rep(1, times = length(od)),
+             pairwise = TRUE,
+             distance = rep(400, times = length(od)))$q
+
+p_vcv <- get_vcv(species = sp_code, model_type = "rem", model_num = 3)
+q_vcv <- get_vcv(species = sp_code, model_type = "dis", model_num = 2)
 
 
 mod_prepped <- prepare_data(strata_data = bbs_stratified,
-                            min_year = 1990,
+                            min_year = 2000,
                             min_n_routes = 1) %>%
   prepare_spatial(strata_map = load_map(st)) %>%
   prepare_model(model = "gamye", model_variant = "spatial")
@@ -72,21 +88,3 @@ model_run <- run_model(model_data = mod_prepped,
                        output_basename = paste0(sp, "-point"),
                        output_dir = "data/generated/model_runs",
                        overwrite = TRUE)
-
-# This will likely be moved to its own analysis script at some point, easier to do all in one right now
-indices <- generate_indices(model_output = model_run)
-p <- plot_indices(indices = indices,
-                  add_observed_means = TRUE) # optional argument to show raw observed mean counts
-
-trends <- generate_trends(indices = indices)
-trend_map <- plot_map(trends)
-
-####### Output ####################################
-
-pdf(file = paste0("output/plots/indices_point_", sp, ".pdf"))
-print(p)
-dev.off()
-
-pdf(file = paste0("output/plots/trends_point_", sp, ".pdf"))
-print(trend_map)
-dev.off()
