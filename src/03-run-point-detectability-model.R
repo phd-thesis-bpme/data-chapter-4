@@ -107,9 +107,6 @@ detectability_data_list <- list(n_avail_covs = ncol(kappa_p),
 mod_prepped$model_data <- c(mod_prepped$model_data, detectability_data_list)
 
 model_run <- run_model(model_data = mod_prepped,
-                       chains = 1,
-                       iter_warmup = 10,
-                       iter_sampling = 10,
                        output_basename = paste0(sp, "-detectability"),
                        output_dir = "data/generated/model_runs",
                        overwrite = TRUE)
