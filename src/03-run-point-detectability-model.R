@@ -9,6 +9,8 @@
 
 library(bbsBayes2)
 library(napops)
+library(suntools)
+library(lutz)
 
 ####### Set Constants #############################
 
@@ -62,12 +64,40 @@ od <- as.POSIXlt(sprintf("%04d-%02d-%02d",
                  format = "%Y-%m-%d")$yday
 
 # Time since local sunrise
-# Need to actually figure out information on Time zone. Ugh...
+coords <- matrix(c(subsetted_data$longitude, subsetted_data$latitude),
+                 nrow = nrow(subsetted_data))
+
+date_time <- as.POSIXct(sprintf("%04d-%02d-%02d %s", 
+                                subsetted_data$year,
+                                subsetted_data$month,
+                                subsetted_data$day,
+                                subsetted_data$start_time),
+                        format = "%Y-%m-%d %H%M")
+
+time_zone <- tz_lookup_coords(lat = subsetted_data$latitude,
+                              lon = subsetted_data$longitude)
+
+utc_offset <- numeric(length = length(time_zone))
+for (i in seq_along(time_zone))
+{
+  utc_offset[i] <- lutz::tz_offset(date_time[i], 
+                                   tz = time_zone[i])$utc_offset_h
+}
+
+utc_time <- lubridate::force_tz(date_time  + (utc_offset*-1 * 60 * 60),
+                                 tzone = "UTC")
+
+sunrise_times <- sunriset(crds = coords,
+                          dateTime = utc_time,
+                          direction = "sunrise",
+                          POSIXct.out = TRUE)
+
+tssr <- as.numeric(difftime(utc_time, sunrise_times$time, units = "hours"))
 
 kappa_p <- avail_fd(species = sp_code,
-                    model = "best",
+                    model = 7,
                     od = od,
-                    tssr = rep(0, times = length(od)),
+                    tssr = tssr,
                     pairwise = TRUE,
                     time = rep(3, times = length(od)))
 
@@ -79,9 +109,9 @@ kappa_q <- percept_fd(species = sp_code,
                       distance = rep(400, times = length(od)))
 
 p <- avail(species = sp_code,
-           model = "best",
+           model = 7,
            od = od,
-           tssr = rep(0, times = length(od)),
+           tssr = tssr,
            pairwise = TRUE,
            time = rep(3, times = length(od)))$p
 
@@ -92,7 +122,7 @@ q <- percept(species = sp_code,
              pairwise = TRUE,
              distance = rep(400, times = length(od)))$q
 
-p_vcv <- get_vcv(species = sp_code, model_type = "rem", model_num = 3)
+p_vcv <- get_vcv(species = sp_code, model_type = "rem", model_num = 7)
 q_vcv <- get_vcv(species = sp_code, model_type = "dis", model_num = 2)
 
 detectability_data_list <- list(n_avail_covs = ncol(kappa_p),
