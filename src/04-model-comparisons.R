@@ -39,13 +39,13 @@ indices_plot_detectability <- plot_indices(indices = indices_detectability)
 ####### Output ####################################
 
 png(filename = "output/plots/oven-map.png",
-    width = 10, height = 6, units = "in", res = 300)
+    width = 20, height = 6, units = "in", res = 300)
 ggarrange(trend_map_route, trend_map_point, trend_map_detectability, nrow = 1,
           labels = c("Route", "Point", "Detectability"))
 dev.off()
 
 png(filename = "output/plots/oven-trajectory.png",
-    width = 10, height = 6, units = "in", res = 300)
+    width = 20, height = 6, units = "in", res = 300)
 ggarrange(indices_plot_route$continent, indices_plot_point$continent, 
           indices_plot_detectability$continent, nrow = 1,
           labels = c("Route", "Point", "Detectability"))
