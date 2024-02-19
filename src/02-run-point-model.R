@@ -46,6 +46,4 @@ for (sp in species_list)
                          output_basename = paste0(sp, "-point"),
                          output_dir = "data/generated/model_runs",
                          overwrite = TRUE)
-  
-  gc()
 }

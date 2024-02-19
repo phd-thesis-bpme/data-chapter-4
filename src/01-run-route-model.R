@@ -40,8 +40,6 @@ for (sp in species_list)
                          output_basename = paste0(sp, "-route"),
                          output_dir = "data/generated/model_runs",
                          overwrite = TRUE)
-  
-  gc()
 }
 
 
