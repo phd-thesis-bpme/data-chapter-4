@@ -14,6 +14,8 @@ library(bbsBayes2)
 species_list <- c("Ovenbird", "Swainson's Thrush", "American Crow",
                   "Blue-headed Vireo", "Eastern Phoebe", "Tennessee Warbler",
                   "Yellow Warbler")
+sp_code <- c("OVEN", "SWTH", "AMCR", "BHVI", "EAPH", 
+             "TEWA", "YEWA")
 st <- "latlong"
 
 ####### Read Data #################################
@@ -28,8 +30,12 @@ bbs_data <- list(birds = bbs_counts,
                  routes = bbs_sites,
                  species = bbs_species)
 
-for (sp in species_list)
+for (i in 1:length(species_list))
 {
+  sp <- species_list[i]
+  sp_out <- sp_code[i]
+  
+  print(sp)
   bbs_stratified <- stratify(by = st, level = "stop", species = sp, data_custom = bbs_data)
   
   # Limit analysis to only Ontario, Canada
@@ -43,7 +49,7 @@ for (sp in species_list)
     prepare_model(model = "gamye", model_variant = "spatial")
   
   model_run <- run_model(model_data = mod_prepped,
-                         output_basename = paste0(sp, "-point"),
+                         output_basename = paste0(sp_out, "-point"),
                          output_dir = "data/generated/model_runs",
                          overwrite = TRUE)
 }
