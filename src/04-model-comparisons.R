@@ -3,50 +3,51 @@
 # BBS Point Level
 # <04-model-comparisons.R>
 # Created December 2023
-# Last Updated December 2023
+# Last Updated February 2024
 
 ####### Import Libraries and External Files #######
 
 library(bbsBayes2)
 library(ggpubr)
 
-####### Read Data #################################
+####### Set Constants #############################
 
-route <- readRDS("data/generated/model_runs/Ovenbird-route.rds")
-point <- readRDS("data/generated/model_runs/Ovenbird-point.rds")
-detectability <- readRDS("data/generated/model_runs/Ovenbird-detectability.rds")
+sp_list <- c("OVEN", "SWTH", "AMCR", "BHVI", "EAPH", "TEWA", "YEWA")
 
-####### Indices and Trends ########################
+####### Main Code #################################
 
-indices_route <- generate_indices(model_output = route)
-trends_route <- generate_trends(indices = indices_route)
-(trend_map_route <- plot_map(trends_route))
-indices_plot_route <- plot_indices(indices = indices_route)
-
-indices_point <- generate_indices(model_output = point)
-trends_point <- generate_trends(indices = indices_point)
-(trend_map_point <- plot_map(trends_point))
-indices_plot_point <- plot_indices(indices = indices_point)
-
-indices_detectability <- generate_indices(model_output = detectability)
-trends_detectability <- generate_trends(indices = indices_detectability)
-(trend_map_detectability <- plot_map(trends_detectability))
-indices_plot_detectability <- plot_indices(indices = indices_detectability)
-
-# Generate a new list of ggarranged trajectory plots comparing all three
-
-
-####### Output ####################################
-
-png(filename = "output/plots/oven-map.png",
-    width = 20, height = 6, units = "in", res = 300)
-ggarrange(trend_map_route, trend_map_point, trend_map_detectability, nrow = 1,
-          labels = c("Route", "Point", "Detectability"))
-dev.off()
-
-png(filename = "output/plots/oven-trajectory.png",
-    width = 20, height = 6, units = "in", res = 300)
-ggarrange(indices_plot_route$continent, indices_plot_point$continent, 
-          indices_plot_detectability$continent, nrow = 1,
-          labels = c("Route", "Point", "Detectability"))
-dev.off()
+for (sp in sp_list)
+{
+  route <- readRDS(paste0("data/generated/model_runs/", sp, "-route.rds"))
+  point <- readRDS(paste0("data/generated/model_runs/", sp, "-point.rds"))
+  detectability <- readRDS(paste0("data/generated/model_runs/", sp, "-detectability.rds"))
+  
+  indices_route <- generate_indices(model_output = route)
+  trends_route <- generate_trends(indices = indices_route)
+  trend_map_route <- plot_map(trends_route)
+  indices_plot_route <- plot_indices(indices = indices_route)
+  
+  indices_point <- generate_indices(model_output = point)
+  trends_point <- generate_trends(indices = indices_point)
+  trend_map_point <- plot_map(trends_point)
+  indices_plot_point <- plot_indices(indices = indices_point)
+  
+  indices_detectability <- generate_indices(model_output = detectability)
+  trends_detectability <- generate_trends(indices = indices_detectability)
+  trend_map_detectability <- plot_map(trends_detectability)
+  indices_plot_detectability <- plot_indices(indices = indices_detectability)
+  
+  png(filename = paste0("output/plots/", sp, "-map.png"),
+      width = 20, height = 6, units = "in", res = 300)
+  ggarrange(trend_map_route, trend_map_point, trend_map_detectability, nrow = 1,
+            labels = c("Route", "Point", "Detectability"))
+  dev.off()
+  
+  png(filename = paste0("output/plots/", sp, "-trajectory.png"),
+      width = 20, height = 6, units = "in", res = 300)
+  ggarrange(indices_plot_route$continent, indices_plot_point$continent, 
+            indices_plot_detectability$continent, nrow = 1,
+            labels = c("Route", "Point", "Detectability"))
+  dev.off()
+  
+}
