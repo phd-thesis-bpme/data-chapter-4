@@ -1,9 +1,9 @@
 ####### Script Information ########################
 # Brandon P.M. Edwards
-# <Project Name>
-# <r-file.R>
-# Created MONTH YEAR
-# Last Updated MONTH YEAR
+# BBS Point Level
+# 00b-extract-aci-landcover.R
+# Created March 2024
+# Last Updated March 2024
 
 ####### Import Libraries and External Files #######
 
@@ -58,14 +58,6 @@ for (i in 1:nrow(bbs_sites))
   bbs_sites$forest_coverage[i] <- sum(landcover_types[,2] >= 200) / nrow(landcover_types)
 }
 
-#' Now we need to go back and check which Ontario (with year > 2011) did NOT receive
-#' landcover values. For those ones, we need to use the NALCMS data and interpolate.
-
-# First, get the indices that didn't work
-na_indices<- which(bbs_sites$year >= 2011 &
-                    bbs_sites$st_abrev == "ON" &
-                    bbs_sites$latitude < 1000 &
-                    is.na(bbs_sites$forest_coverage))
-
-
 ####### Output ####################################
+
+saveRDS(object = bbs_sites, file = "data/generated/bbs_sites_aci.RDS")
