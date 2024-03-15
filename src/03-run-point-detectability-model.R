@@ -3,7 +3,7 @@
 # BBS Point Level
 # <03-run-point-detectability-model.R>
 # Created July 2023
-# Last Updated February 2024
+# Last Updated March 2024
 
 ####### Import Libraries and External Files #######
 
@@ -26,7 +26,7 @@ st <- "latlong"
 ####### Read Data #################################
 
 bbs_counts <- readRDS(file = "data/generated/bbs_counts.RDS")
-bbs_sites <- readRDS(file = "data/generated/bbs_sites.RDS"); bbs_sites$rt_st <- NULL
+bbs_sites <- readRDS(file = "data/generated/bbs_sites_fc.RDS"); bbs_sites$rt_st <- NULL
 bbs_species <- load_bbs_data(level = "stop")$species
 
 ####### Main Code #################################
@@ -48,7 +48,7 @@ for (i in 1:length(species_list))
     bbs_stratified$routes_strata[which(bbs_stratified$routes_strata$st_abrev == "ON"), ]
   
   prepared_data <- prepare_data(strata_data = bbs_stratified,
-                                min_year = 2000,
+                                min_year = 2011,
                                 min_n_routes = 1) %>%
     prepare_spatial(strata_map = load_map(st))
   
@@ -105,16 +105,13 @@ for (i in 1:length(species_list))
   tssr <- as.numeric(difftime(utc_time, sunrise_times$time, units = "hours"))
   
   #' Determine which detectability model to use for each species.
-  #' For now, I am just explicitely choosing the roadside model for distance models.
-  #' However that will eventually turn into the best model, once I get GEE functioning.
-  #' Also, I may eventually decide to choose the "fullest best model", where if there is
+  #' I may eventually decide to choose the "fullest best model", where if there is
   #' a tied (or within 5 delta AIC) model, I hcoose the fuller one.
   p_best_model_df <- coef_removal(species = sp_code)[,c("Model", "AIC")]
   p_best_model <- p_best_model_df[which(p_best_model_df$AIC == min(p_best_model_df$AIC)), "Model"]
   
-  
-  #q_best_model_df <- coef_distance(species = sp_code)[, c("Model", "AIC")]
-  q_best_model <- 2#q_best_model_df[which(q_best_model_df$AIC == min(q_best_model_df$AIC)), "Model"]
+  q_best_model_df <- coef_distance(species = sp_code)[, c("Model", "AIC")]
+  q_best_model <- q_best_model_df[which(q_best_model_df$AIC == min(q_best_model_df$AIC)), "Model"]
   
   kappa_p <- avail_fd(species = sp_code,
                       model = p_best_model,
@@ -125,8 +122,8 @@ for (i in 1:length(species_list))
   
   kappa_q <- percept_fd(species = sp_code,
                         model = q_best_model,
-                        road = rep(TRUE, times= length(od)),
-                        forest = rep(1, times = length(od)),
+                        road = rep(TRUE, times = nrow(subsetted_data)),
+                        forest = subsetted_data$forest_coverage,
                         pairwise = TRUE,
                         distance = rep(400, times = length(od)))
   
@@ -139,8 +136,8 @@ for (i in 1:length(species_list))
   
   q <- percept(species = sp_code,
                model = q_best_model,
-               road = rep(TRUE, times = length(od)),
-               forest = rep(1, times = length(od)),
+               road = rep(TRUE, times = nrow(subsetted_data)),
+               forest = subsetted_data$forest_coverage,
                pairwise = TRUE,
                distance = rep(400, times = length(od)))$q
   
