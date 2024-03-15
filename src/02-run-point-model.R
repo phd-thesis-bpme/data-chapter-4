@@ -21,7 +21,7 @@ st <- "latlong"
 ####### Read Data #################################
 
 bbs_counts <- readRDS(file = "data/generated/bbs_counts.RDS")
-bbs_sites <- readRDS(file = "data/generated/bbs_sites.RDS"); bbs_sites$rt_st <- NULL
+bbs_sites <- readRDS(file = "data/generated/bbs_sites_fc.RDS"); bbs_sites$rt_st <- NULL
 bbs_species <- load_bbs_data(level = "stop")$species
 
 ####### Main Code #################################
