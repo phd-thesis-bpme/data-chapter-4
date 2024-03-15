@@ -34,6 +34,7 @@ for (i in 1:length(species_list))
   # Limit analysis to only Ontario, Canada
   bbs_stratified$routes_strata <- 
     bbs_stratified$routes_strata[which(bbs_stratified$routes_strata$st_abrev == "ON"), ]
+  bbs_stratified$routes_strata$forest_coverage <- NA # bbsBayes2 needs this, doesn't exist in route modelling
   
   mod_prepped <- prepare_data(strata_data = bbs_stratified,
                               min_year = 2011,
@@ -46,5 +47,3 @@ for (i in 1:length(species_list))
                          output_dir = "data/generated/model_runs",
                          overwrite = TRUE)
 }
-
-
