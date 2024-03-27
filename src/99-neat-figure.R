@@ -18,14 +18,9 @@ sp_list <- c("OVEN")
 
 model <- readRDS(paste0("data/generated/model_runs/", sp_list, "-detectability.rds"))
 
-lc_rasters <- vector(mode = "list", length = 12)
-names(lc_rasters) <- as.character(seq(2011,2022))
-for (y in 2011:2022)
-{
-  lc_rasters[[as.character(y)]] <- rast(paste0("data/raw/spatial/aci/aci_",
-                                               y,
-                                               "_on.tif"))
-}
+nalcms_2010 <- rast("data/raw/spatial/nalcms/CAN_Land_cover_2010v2_30m_TIF/CAN_NALCMS_landcover_2010v2_30m/data/CAN_NALCMS_landcover_2010v2_30m.tif")
+nalcms_2015 <- rast("data/raw/spatial/nalcms/can_land_cover_2015v3_30m_tif/CAN_NALCMS_landcover_2015v3_30m/data/CAN_NALCMS_landcover_2015v3_30m.tif")
+nalcms_2020 <- rast("data/raw/spatial/nalcms/can_land_cover_2020_30m_tif/CAN_NALCMS_landcover_2020_30m/data/CAN_NALCMS_landcover_2020_30m.tif")
 
 ####### Main Code #################################
 
@@ -51,7 +46,7 @@ for (i in 1:nrow(fc_change))
   fc_change$N_Years[i] <- n_year
 }
 
-point <- "68-9-stop_41"
+point <- "68-68-255-stop_27"
 point_df <- data[which(data$route == point), ]
 
 point_df$edr <- edr(species = "OVEN",
@@ -60,12 +55,16 @@ point_df$edr <- edr(species = "OVEN",
                             forest = point_df$forest_coverage,
                             pairwise = TRUE)[, "EDR_est"]
 
-for (y in 2011:2022)
+maps <- list(nalcms_2010, nalcms_2015, nalcms_2020)
+years <- c(2010, 2015, 2020)
+
+for (i in 1:3)
 {
-  png(filename = paste0("output/plots/fc-vs-edr/", y, ".png"),
-      width = 8, height = 4, res = 300, units = "in")
-  par(mfrow = c(1, 2))
-  map <- lc_rasters[[as.character(y)]]
+  y <- years[i]
+  #png(filename = paste0("output/plots/fc-vs-edr/", years[i], ".png"),
+   #   width = 8, height = 4, res = 300, units = "in")
+  #par(mfrow = c(1, 2))
+  map <- maps[[i]]
   pt_coords <- project(vect(matrix(c(point_df$longitude[1], point_df$latitude[1]), ncol = 2),
                             crs = "+proj=longlat"),
                        crs(map))
@@ -73,10 +72,10 @@ for (y in 2011:2022)
   map_cropped <- crop(map, bbs_radius)
   plot(map_cropped)
   lines(bbs_radius)
-  
-  plot(point_df$edr~point_df$year,
-       col = ifelse(point_df$year == y, "red", "black"),
-       pch=ifelse(point_df$year == y, 19, 1), cex=ifelse(point_df$year == y, 2, 1))
+  # 
+  # plot(point_df$edr~point_df$year,
+  #      col = ifelse(point_df$year == y, "red", "black"),
+  #      pch=ifelse(point_df$year == y, 19, 1), cex=ifelse(point_df$year == y, 2, 1))
   
   dev.off()
 }

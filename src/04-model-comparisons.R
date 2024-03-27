@@ -3,7 +3,7 @@
 # BBS Point Level
 # <04-model-comparisons.R>
 # Created December 2023
-# Last Updated February 2024
+# Last Updated March 2024
 
 ####### Import Libraries and External Files #######
 
@@ -12,12 +12,12 @@ library(ggpubr)
 
 ####### Set Constants #############################
 
-sp_list <- c("OVEN", "SWTH", "AMCR", "BHVI", "EAPH", "TEWA", "YEWA")
+sp <- "OVEN"#sp_list <- c("OVEN", "SWTH", "AMCR", "BHVI", "EAPH", "TEWA", "YEWA")
 
 ####### Main Code #################################
 
-for (sp in sp_list)
-{
+#for (sp in sp_list)
+#{
   route <- readRDS(paste0("data/generated/model_runs/", sp, "-route.rds"))
   point <- readRDS(paste0("data/generated/model_runs/", sp, "-point.rds"))
   detectability <- readRDS(paste0("data/generated/model_runs/", sp, "-detectability.rds"))
@@ -37,6 +37,25 @@ for (sp in sp_list)
   trend_map_detectability <- plot_map(trends_detectability)
   indices_plot_detectability <- plot_indices(indices = indices_detectability)
   
+  route_cont <- indices_route$indices[which(indices_route$indices$region == "continent"), ]
+  point_cont <- indices_point$indices[which(indices_point$indices$region == "continent"), ]
+  detect_cont <- indices_detectability$indices[which(indices_detectability$indices$region == "continent"),]
+  
+  ratio_indices <- (route_cont$index / point_cont$index) /50
+  plot(x = point_cont$year, y = ratio_indices, ylim = c(0,2),
+       main = "Route Index / Point Index")
+  abline(h = 1)
+  
+  ratio_indices <- (route_cont$index / detect_cont$index) / 50
+  plot(x = point_cont$year, y = ratio_indices, ylim = c(0,2),
+       main = "Route Index / Detectability Index")
+  abline(h = 1)
+  
+  ratio_indices <- (point_cont$index / detect_cont$index) 
+  plot(x = point_cont$year, y = ratio_indices, ylim = c(0,2),
+       main = "Point Index / Detectability Index")
+  abline(h = 1)
+  
   png(filename = paste0("output/plots/", sp, "-map.png"),
       width = 20, height = 6, units = "in", res = 300)
   ggarrange(trend_map_route, trend_map_point, trend_map_detectability, nrow = 1,
@@ -50,4 +69,4 @@ for (sp in sp_list)
             labels = c("Route", "Point", "Detectability"))
   dev.off()
   
-}
+#}
