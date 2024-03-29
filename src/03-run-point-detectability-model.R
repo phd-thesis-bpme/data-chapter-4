@@ -48,7 +48,7 @@ for (i in 1:length(species_list))
     bbs_stratified$routes_strata[which(bbs_stratified$routes_strata$st_abrev == "ON"), ]
   
   prepared_data <- prepare_data(strata_data = bbs_stratified,
-                                min_year = 2011,
+                                min_year = 2010,
                                 min_n_routes = 1) %>%
     prepare_spatial(strata_map = load_map(st))
   

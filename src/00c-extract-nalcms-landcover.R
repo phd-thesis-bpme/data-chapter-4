@@ -21,7 +21,7 @@ nalcms_2020 <- rast("data/raw/spatial/nalcms/can_land_cover_2020_30m_tif/CAN_NAL
 bbs_sites$forest_coverage <- NA
 
 # First, get the indices that didn't work
-indices<- which(bbs_sites$year >= 2011 &
+indices<- which(bbs_sites$year >= 2010 &
                      bbs_sites$st_abrev == "ON" &
                      bbs_sites$latitude < 1000)
 

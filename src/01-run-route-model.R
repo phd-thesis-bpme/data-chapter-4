@@ -37,7 +37,7 @@ for (i in 1:length(species_list))
   bbs_stratified$routes_strata$forest_coverage <- NA # bbsBayes2 needs this, doesn't exist in route modelling
   
   mod_prepped <- prepare_data(strata_data = bbs_stratified,
-                              min_year = 2011,
+                              min_year = 2010,
                               min_n_routes = 1) %>%
     prepare_spatial(strata_map = load_map(st)) %>%
     prepare_model(model = "gamye", model_variant = "spatial")
