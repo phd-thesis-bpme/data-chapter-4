@@ -41,24 +41,24 @@ route_cont <- indices_route$indices[which(indices_route$indices$region == "conti
 point_cont <- indices_point$indices[which(indices_point$indices$region == "continent"), ]
 detect_cont <- indices_detectability$indices[which(indices_detectability$indices$region == "continent"),]
 
-png(filename = paste0("output/plots/trends-and-trajectories.png"),
-    width = 6, height = 4, units = "in", res = 600)
-ggarrange(trend_map_route, trend_map_point, trend_map_detectability,
-          indices_plot_route$continent, indices_plot_point$continent, 
-          indices_plot_detectability$continent,
-          nrow = 2, ncol = 3,
-          common.legend = TRUE)
+# png(filename = paste0("output/plots/trends-and-trajectories.png"),
+#     width = 6, height = 4, units = "in", res = 600)
+# ggarrange(trend_map_route, trend_map_point, trend_map_detectability,
+#           indices_plot_route$continent, indices_plot_point$continent, 
+#           indices_plot_detectability$continent,
+#           nrow = 2, ncol = 3,
+#           common.legend = TRUE)
+# dev.off()
+
+png(filename = paste0("output/plots/", sp, "-map.png"),
+    width = 20, height = 6, units = "in", res = 300)
+ggarrange(trend_map_route, trend_map_point, trend_map_detectability, nrow = 1,
+          labels = c("Route", "Point", "Detectability"))
 dev.off()
 
-# png(filename = paste0("output/plots/", sp, "-map.png"),
-#     width = 20, height = 6, units = "in", res = 300)
-# ggarrange(trend_map_route, trend_map_point, trend_map_detectability, nrow = 1,
-#           labels = c("Route", "Point", "Detectability"))
-# dev.off()
-# 
-# png(filename = paste0("output/plots/", sp, "-trajectory.png"),
-#     width = 20, height = 6, units = "in", res = 300)
-# ggarrange(indices_plot_route$continent, indices_plot_point$continent, 
-#           indices_plot_detectability$continent, nrow = 1,
-#           labels = c("Route", "Point", "Detectability"))
-# dev.off()
+png(filename = paste0("output/plots/", sp, "-trajectory.png"),
+    width = 20, height = 6, units = "in", res = 300)
+ggarrange(indices_plot_route$continent, indices_plot_point$continent,
+          indices_plot_detectability$continent, nrow = 1,
+          labels = c("Route", "Point", "Detectability"))
+dev.off()
