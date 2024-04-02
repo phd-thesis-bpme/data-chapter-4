@@ -72,6 +72,20 @@ data {
   // This approach to CV only works if all observers and routes are included in each training-fold
   // So, CV folds must be nested within observers and routes
   // Could implement leave future observation style CV within observers and routes if indexing was done carefully
+  
+  
+  // Detectability and varprop related data
+  int<lower = 1> n_avail_covs; //how many covariates are being used for availability?
+  int<lower = 1> n_percept_covs; //how many covariates are being used for perceptibility?
+  
+  matrix[n_counts, n_avail_covs] kappa_p;
+  matrix[n_counts, n_percept_covs] kappa_q;
+  
+  matrix[n_avail_covs, n_avail_covs] vcv_p;
+  matrix[n_percept_covs, n_percept_covs] vcv_q;
+  
+  vector[n_counts] p;
+  vector[n_counts] q;
 
 }
 
@@ -121,6 +135,10 @@ parameters {
 
   vector[n_knots_year] BETA_raw;//_raw;
   matrix[n_strata,n_knots_year] beta_raw;         // GAM strata level parameters
+  
+  // Detectability varprop parameters
+  vector[n_avail_covs] zeta; //varprop for availability
+  vector[n_percept_covs] xi; //varprop for perceptibility
 
 }
 
@@ -177,7 +195,16 @@ for(s in 1:n_strata){
     noise = 0;
     }
 
-    E[i] =  smooth_pred[year_tr[i],strat_tr[i]] + strata + yeareffect[strat_tr[i],year_tr[i]] + eta*first_year_tr[i] + ste + obs + noise;
+    E[i] =  log(p[i] * q[i]) +
+      kappa_p[i,] * zeta +
+      kappa_q[i,] * xi +
+      smooth_pred[year_tr[i],strat_tr[i]] + 
+      strata + 
+      yeareffect[strat_tr[i],year_tr[i]] + 
+      eta*first_year_tr[i] + 
+      ste + 
+      obs + 
+      noise;
   }
 
 
@@ -206,17 +233,21 @@ model {
   }
   sdobs ~ normal(0,0.3); // informative prior on scale of observer effects - suggests observer variation larger than 3-4-fold differences is unlikely
   sdste ~ student_t(3,0,1); //prior on sd of site effects
-  sdyear ~ gamma(2,2); // prior on sd of yeareffects - stratum specific, and boundary-avoiding with a prior mode at 0.5 (1/2) - recommended by https://doi.org/10.1007/s11336-013-9328-2
+  sdyear ~ gamma(2,10); //informative prior on scale of yeareffects
+  // sdyear ~ normal(0,0.3); // alternative informative prior on scale of yeareffects - 99% of prior
+  // // mass is for values < 0.77, suggesting that annual increases of 50% and decreases
+  // // of 35% are relatively common, but 3-4 fold annual increases or decreases are unlikely
   sdBETA ~ student_t(3,0,1); // prior on sd of GAM parameters
-  sdbeta ~ student_t(3,0,1); // prior on sd of GAM parameters
-  sdstrata ~ student_t(3,0,1); //prior on sd of intercept variation
+  sdbeta ~ std_normal(); // prior on sd of GAM parameters
+  // sdbeta ~ student_t(3,0,1); // alternative prior on sd of GAM parameters
+   sdstrata ~ student_t(3,0,1); //prior on sd of intercept variation
 
 
   obs_raw ~ std_normal(); // ~ student_t(3,0,1);//observer effects
-  //sum(obs_raw) ~ normal(0,0.001*n_observers); // constraint isn't useful here
+  sum(obs_raw) ~ normal(0,0.001*n_observers); // constraint may not be necessary
 
   ste_raw ~ std_normal();//site effects
-  //sum(ste_raw) ~ normal(0,0.001*n_sites); //constraint isn't useful here
+  sum(ste_raw) ~ normal(0,0.001*n_sites); //constraint may not be necessary
 
  for(s in 1:n_strata){
 
@@ -238,8 +269,11 @@ model {
 for(k in 1:n_knots_year){
     beta_raw[,k] ~ icar_normal(n_strata, node1, node2);;
 }
-   strata_raw ~ icar_normal(n_strata, node1, node2);
-    //sum(strata_raw) ~ normal(0,0.001*n_strata);
+strata_raw ~ icar_normal(n_strata, node1, node2);
+//sum(strata_raw) ~ normal(0,0.001*n_strata);
+
+zeta ~ multi_normal(rep_vector(0, n_avail_covs), vcv_p);
+xi ~ multi_normal(rep_vector(0, n_percept_covs), vcv_q);
 
 if(use_pois){
   count_tr ~ poisson_log(E); //vectorized count likelihood with log-transformation

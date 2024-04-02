@@ -1,7 +1,7 @@
 ####### Script Information ########################
 # Brandon P.M. Edwards
-# BBS Data Integration
-# <00b-standardize-bbs.R>
+# BBS Point Level
+# <00-standardize-bbs-counts.R>
 # Created June 2023
 # Last Updated June 2023
 
@@ -53,7 +53,8 @@ bbs_route_merged <- dplyr::left_join(stop_location[, c("rt_st",
                                                        "POINT_Y",
                                                        "Stop")],
                                      bbs_route, 
-                                      by = "rt_st")
+                                      by = "rt_st",
+                                     relationship = "many-to-many")
 
 bbs_route_merged <- bbs_route_merged[-which(is.na(bbs_route_merged$route)), ]
 # sort by routexstate combo, then year, then by stop number
@@ -65,6 +66,7 @@ bbs_route_sorted <- bbs_route_merged[order(bbs_route_merged$rt_st,
 bbs_route_sorted$index <- seq(1, nrow(bbs_route_sorted))
 bbs_route_sorted$stop_start_time <- NA
 
+# Infer start times for each stop in a route
 for (rs in unique(bbs_route_sorted$rt_st))
 {
   temp1 <- bbs_route_sorted[which(bbs_route_sorted$rt_st == rs), ]
@@ -87,9 +89,12 @@ for (rs in unique(bbs_route_sorted$rt_st))
   }
 }
 
-bbs_route_sorted$route <- paste0(bbs_route_sorted$route,
+bbs_route_sorted$route <- paste0(bbs_route_sorted$state_num, "-",
+                                   bbs_route_sorted$route,
                                  "-stop_",
                                  bbs_route_sorted$Stop)
+bbs_route_sorted$rt_yr <- paste0(bbs_route_sorted$route, "-", bbs_route_sorted$year)
+bbs_route_sorted <- bbs_route_sorted[-which(duplicated(bbs_route_sorted$rt_yr)), ]
 
 # Now reorder this routes dataframe to match the BBS
 bbs_route_stops <- as.data.frame(bbs_route_sorted[, c("country_num",
@@ -134,7 +139,8 @@ bbs_counts_long <- melt(bbs_counts,
                         variable.name = "stop",
                         value.name = "species_total")
 
-bbs_counts_long$route <- paste0(bbs_counts_long$route,
+bbs_counts_long$route <- paste0(bbs_counts_long$state_num, "-",
+                                bbs_counts_long$route,
                                 "-",
                                 bbs_counts_long$stop)
 bbs_counts_long <- as.data.frame(bbs_counts_long[, c("route_data_id",
