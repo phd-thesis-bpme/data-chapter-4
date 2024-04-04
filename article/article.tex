@@ -1,7 +1,7 @@
 \documentclass[12pt]{article}
 
 \usepackage{setspace}
-\onehalfspacing
+\doublespacing
 
 \usepackage{natbib}
 \bibliographystyle{apalike}
@@ -142,11 +142,13 @@ This means that, compared to the point-level model in Equation \ref{bbs-point}, 
 This is because we are still trying to relate these effects to the \textit{observed} counts $y_{j,i,t,o}$.
 However, this means that when we estimate the population index using Equation \ref{index}, we are effectively estimating the expected true abundance at a given point in stratum $i$ during year $t$, because Equation \ref{index} does not include information about the detectability offset $\log(\hat{p} \hat{q})_{j,i,t}$, and is therefore the equivalent of setting $\hat{p} = \hat{q} = 1 \implies \log(\hat{p} \hat{q})_{j,i,t} = 0$.
 
-%\section{Next Analysis Steps}
-%\subsection{Develop Model Code}
-%Given Equation \ref{bbs_varprop}, the next steps would be to write this model in Stan. This can likely be done relatively quickly as the spatially explicit base model is available through the R package \textit{bbsBayes2} \citep{edwards_bbsbayes_2021}, and so this pre-existing model file can easily be modified to include the above effects and offset.
+\subsection{Data Acquisition}
 
-%\subsection{Test Model}
+\subsection{Breeding Bird Survey Data}
+
+\par We used the package \texttt{bbsBayes2} to download and process BBS data \citep{edwards_bbsbayes_2021}. 
+For analysis with the route-level model, we followed the same data preparation steps as normal, in that data were downloaded from the USGS ScienceBase site, stratified based on a 1-degree by 1-degree block of latitude and longitude, prepared for modelling in Stan, and then modelled. 
+
 
 
 	\bibliography{refs}
