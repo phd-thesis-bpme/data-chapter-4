@@ -3,7 +3,7 @@
 # BBS Point Level
 # 00c-extract-nalcms-landcover.R
 # Created March 2024
-# Last Updated March 2024
+# Last Updated April 2024
 
 ####### Import Libraries and External Files #######
 
@@ -22,7 +22,6 @@ bbs_sites$forest_coverage <- NA
 
 # First, get the indices that didn't work
 indices<- which(bbs_sites$year >= 2010 &
-                     bbs_sites$st_abrev == "ON" &
                      bbs_sites$latitude < 1000)
 
 bbs_reduced <- bbs_sites[indices, ]
