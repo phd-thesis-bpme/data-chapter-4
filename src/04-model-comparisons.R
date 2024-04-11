@@ -3,7 +3,7 @@
 # BBS Point Level
 # <04-model-comparisons.R>
 # Created December 2023
-# Last Updated March 2024
+# Last Updated April 2024
 
 ####### Import Libraries and External Files #######
 
@@ -15,9 +15,9 @@ library(ggpubr)
 sp <- "OVEN"
 
 ####### Main Code #################################
-route <- readRDS(paste0("data/generated/model_runs/", sp, "-route.rds"))
-point <- readRDS(paste0("data/generated/model_runs/", sp, "-point.rds"))
-detectability <- readRDS(paste0("data/generated/model_runs/", sp, "-detectability.rds"))
+route <- readRDS(paste0("output/model_runs/", sp, "-route.rds"))
+point <- readRDS(paste0("output/model_runs/", sp, "-point.rds"))
+detectability <- readRDS(paste0("output/model_runs/", sp, "-detectability.rds"))
 
 indices_route <- generate_indices(model_output = route)
 trends_route <- generate_trends(indices = indices_route)
