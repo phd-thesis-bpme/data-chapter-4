@@ -35,7 +35,7 @@ for (i in 1:length(species_list))
   print(sp)
   bbs_stratified <- stratify(by = st, level = "stop", species = sp, data_custom = bbs_data)
   
-  # Limit analysis to only Ontario, Canada
+  # Limit analysis to only Canada
   bbs_stratified$routes_strata <- 
     bbs_stratified$routes_strata[which(bbs_stratified$routes_strata$country == "CA"), ]
   

@@ -3,7 +3,7 @@
 # BBS Point Level
 # <03-run-point-detectability-model.R>
 # Created July 2023
-# Last Updated March 2024
+# Last Updated April 2024
 
 ####### Import Libraries and External Files #######
 
@@ -14,12 +14,9 @@ library(lutz)
 
 ####### Set Constants #############################
 
-species_list <- c("Ovenbird", "Swainson's Thrush", "American Crow",
-                  "Blue-headed Vireo", "Eastern Phoebe", "Tennessee Warbler",
-                  "Yellow Warbler")
+species_list <- c("Ovenbird")
 
-sp_code_list <- c("OVEN", "SWTH", "AMCR", "BHVI", "EAPH", 
-             "TEWA", "YEWA")
+sp_code_list <- c("OVEN")
 
 st <- "latlong"
 
@@ -43,9 +40,9 @@ for (i in 1:length(species_list))
   
   bbs_stratified <- stratify(by = st, level = "stop", species = sp, data_custom = bbs_data)
   
-  # Limit analysis to only Ontario, Canada
+  # Limit analysis to only Canada
   bbs_stratified$routes_strata <- 
-    bbs_stratified$routes_strata[which(bbs_stratified$routes_strata$st_abrev == "ON"), ]
+    bbs_stratified$routes_strata[which(bbs_stratified$routes_strata$country == "CA"), ]
   
   prepared_data <- prepare_data(strata_data = bbs_stratified,
                                 min_year = 2010,
@@ -161,6 +158,6 @@ for (i in 1:length(species_list))
   
   model_run <- run_model(model_data = mod_prepped,
                          output_basename = paste0(sp_code, "-detectability"),
-                         output_dir = "data/generated/model_runs",
+                         output_dir = "output/model_runs",
                          overwrite = TRUE)
 }
