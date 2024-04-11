@@ -3,7 +3,7 @@
 # BBS Point Level
 # <01-run-route-model.R>
 # Created July 2023
-# Last Updated March 2024
+# Last Updated April 2024
 
 ####### Import Libraries and External Files #######
 
@@ -11,11 +11,8 @@ library(bbsBayes2)
 
 ####### Set Constants #############################
 
-species_list <- c("Ovenbird", "Swainson's Thrush", "American Crow",
-        "Blue-headed Vireo", "Eastern Phoebe", "Tennessee Warbler",
-        "Yellow Warbler")
-sp_code <- c("OVEN", "SWTH", "AMCR", "BHVI", "EAPH", 
-             "TEWA", "YEWA")
+species_list <- c("Ovenbird")
+sp_code <- c("OVEN")
 
 st <- "latlong"
 
@@ -33,7 +30,7 @@ for (i in 1:length(species_list))
   
   # Limit analysis to only Ontario, Canada
   bbs_stratified$routes_strata <- 
-    bbs_stratified$routes_strata[which(bbs_stratified$routes_strata$st_abrev == "ON"), ]
+    bbs_stratified$routes_strata[which(bbs_stratified$routes_strata$country == "CA"), ]
   bbs_stratified$routes_strata$forest_coverage <- NA # bbsBayes2 needs this, doesn't exist in route modelling
   
   mod_prepped <- prepare_data(strata_data = bbs_stratified,
@@ -44,6 +41,6 @@ for (i in 1:length(species_list))
   
   model_run <- run_model(model_data = mod_prepped,
                          output_basename = paste0(sp_out, "-route"),
-                         output_dir = "data/generated/model_runs",
+                         output_dir = "output/model_runs",
                          overwrite = TRUE)
 }
