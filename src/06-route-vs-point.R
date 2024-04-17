@@ -20,8 +20,8 @@ sp <- "OVEN"
 
 ####### Read Data #################################
 
-route_indices <- readRDS(file = "output/indices/route.RDS")
-point_indices <- readRDS(file = "output/indices/point.RDS")
+route_indices <- readRDS(file = paste0("output/indices/", sp, "_route.RDS"))
+point_indices <- readRDS(file = paste0("output/indices/", sp, "_point.RDS"))
 
 ####### Compare Indices ###########################
 
@@ -67,3 +67,5 @@ point_indices$indices <- point_indices$indices[which(point_indices$indices$regio
 
 route_trends <- generate_trends(route_indices)
 point_trends <- generate_trends(point_indices)
+
+summary(lm(point_trends$trends$trend ~ route_trends$trends$trend))

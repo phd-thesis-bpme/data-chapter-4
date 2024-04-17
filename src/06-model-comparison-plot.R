@@ -16,9 +16,9 @@ sp <- "OVEN"
 
 ####### Read Data #################################
 
-route_indices <- readRDS(file = "output/indices/route.RDS")
-point_indices <- readRDS(file = "output/indices/point.RDS")
-detect_indices <- readRDS(file = "output/indices/detectability.RDS")
+route_indices <- readRDS(file = paste0("output/indices/", sp, "_route.RDS"))
+point_indices <- readRDS(file = paste0("output/indices/", sp, "_point.RDS"))
+detect_indices <- readRDS(file = paste0("output/indices/", sp, "_detectability.RDS"))
 
 ####### Main Code #################################
 

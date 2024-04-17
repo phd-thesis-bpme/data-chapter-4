@@ -12,7 +12,7 @@ library(ggpubr)
 
 ####### Set Constants #############################
 
-sp <- "OVEN"
+sp <- "WOTH"
 
 ####### Read Data #################################
 
@@ -24,12 +24,12 @@ detectability <- readRDS(paste0("output/model_runs/", sp, "-detectability.rds"))
 
 indices_route <- generate_indices(model_output = route)
 saveRDS(object = indices_route,
-        file = "output/indices/route.RDS")
+        file = paste0("output/indices/", sp, "_route.RDS"))
 
 indices_point <- generate_indices(model_output = point)
 saveRDS(object = indices_point,
-        file = "output/indices/point.RDS")
+        file = paste0("output/indices/", sp, "_point.RDS"))
 
 indices_detectability <- generate_indices(model_output = detectability)
 saveRDS(object = indices_detectability,
-        file = "output/indices/detectability.RDS")
+        file = paste0("output/indices/", sp, "_detectability.RDS"))
