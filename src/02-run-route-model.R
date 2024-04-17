@@ -11,8 +11,12 @@ library(bbsBayes2)
 
 ####### Set Constants #############################
 
-species_list <- c("Ovenbird")
-sp_code <- c("OVEN")
+species_list <- c("Ovenbird", "Wood Thrush", "White-throated Sparrow", 
+                  "Black-throated Green Warbler", "Winter Wren",
+                  "Pileated Woodpecker", "Blue-headed Vireo", 
+                  "American Goldfinch", "Eastern Wood-pewee")
+sp_code <- c("OVEN", "WOTH", "WTSP", "BTNW", "WIWR", "PIWO",
+             "BHVI", "AMGO", "EAWP")
 
 st <- "latlong"
 
