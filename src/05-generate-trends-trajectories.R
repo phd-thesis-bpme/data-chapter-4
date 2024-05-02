@@ -12,24 +12,25 @@ library(ggpubr)
 
 ####### Set Constants #############################
 
-sp <- "WOTH"
-
-####### Read Data #################################
-
-route <- readRDS(paste0("output/model_runs/", sp, "-route.rds"))
-point <- readRDS(paste0("output/model_runs/", sp, "-point.rds"))
-detectability <- readRDS(paste0("output/model_runs/", sp, "-detectability.rds"))
+sp_list <- c("WOTH", "PIWO")
 
 ####### Calculate Indices and Output ##############
 
-indices_route <- generate_indices(model_output = route)
-saveRDS(object = indices_route,
-        file = paste0("output/indices/", sp, "_route.RDS"))
-
-indices_point <- generate_indices(model_output = point)
-saveRDS(object = indices_point,
-        file = paste0("output/indices/", sp, "_point.RDS"))
-
-indices_detectability <- generate_indices(model_output = detectability)
-saveRDS(object = indices_detectability,
-        file = paste0("output/indices/", sp, "_detectability.RDS"))
+for (sp in sp_list)
+{
+  route <- readRDS(paste0("output/model_runs/", sp, "-route.rds"))
+  point <- readRDS(paste0("output/model_runs/", sp, "-point.rds"))
+  detectability <- readRDS(paste0("output/model_runs/", sp, "-detectability.rds"))
+  
+  indices_route <- generate_indices(model_output = route)
+  saveRDS(object = indices_route,
+          file = paste0("output/indices/", sp, "_route.RDS"))
+  
+  indices_point <- generate_indices(model_output = point)
+  saveRDS(object = indices_point,
+          file = paste0("output/indices/", sp, "_point.RDS"))
+  
+  indices_detectability <- generate_indices(model_output = detectability)
+  saveRDS(object = indices_detectability,
+          file = paste0("output/indices/", sp, "_detectability.RDS")) 
+}
