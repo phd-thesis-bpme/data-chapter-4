@@ -16,7 +16,7 @@ parameters {
 model {
   for (i in 1:N)
   {
-    point_index[i] ~ normal(intercept + beta[stratum[i]] * route_index[i], sigma);
+    route_index[i] ~ normal(intercept + beta[stratum[i]] * point_index[i], sigma);
   }
   
   intercept ~ normal(0,1);

@@ -41,7 +41,7 @@ point_df <- point_df[region_order, ]
 
 model_data <- list(N = nrow(route_df),
                    n_strata = length(unique(route_df$region)),
-                   route_index = route_df$index / 50,
+                   route_index = route_df$index ,
                    point_index = point_df$index,
                    stratum = as.numeric(factor(route_df$region)))
 
