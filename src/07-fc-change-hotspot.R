@@ -106,8 +106,8 @@ abline(a = coef(mod)[1], b = coef(mod)[2])
 ind_plot <- plot_indices(indices = point_indices)
 det_plot <- plot_indices(indices = detect_indices)
 
-st_min <- mean_fc_change_stratum[which(mean_fc_change_stratum$x == min(mean_fc_change_stratum$x)), "Group.1"]
-st_max <- mean_fc_change_stratum[which(mean_fc_change_stratum$x == max(mean_fc_change_stratum$x)), "Group.1"]
+st_min <- mean_fc_change_stratum[which(mean_fc_change_stratum$Mean_Change == min(mean_fc_change_stratum$Mean_Change)), "Stratum"]
+st_max <- mean_fc_change_stratum[which(mean_fc_change_stratum$Mean_Change == max(mean_fc_change_stratum$Mean_Change)), "Stratum"]
 
 fc_change_stratum <- fc_change[which(fc_change$Stratum == st_min), ]
 strat_rast <- vect(matrix(c(fc_change_stratum$Longitude, fc_change_stratum$Latitude), ncol = 2),
