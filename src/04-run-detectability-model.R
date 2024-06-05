@@ -126,18 +126,14 @@ for (i in 1:length(species_list))
                pairwise = TRUE,
                distance = rep(400, times = length(od)))$q
   
-  detectability_data_list <- list(n_avail_covs = ncol(kappa_p),
-                                  n_percept_covs = ncol(kappa_q),
-                                  kappa_p = kappa_p,
-                                  kappa_q = kappa_q,
-                                  vcv_p = p_vcv,
-                                  vcv_q = q_vcv,
-                                  p = p,
+  detectability_data_list <- list(p = p,
                                   q = q)
   
   mod_prepped$model_data <- c(mod_prepped$model_data, detectability_data_list)
   
   model_run <- run_model(model_data = mod_prepped,
+                         chains = 4,
+                         parallel_chains = 2,
                          output_basename = paste0(sp_code, "-detectability"),
                          output_dir = "output/model_runs",
                          overwrite = TRUE)

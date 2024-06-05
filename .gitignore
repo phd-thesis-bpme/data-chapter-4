@@ -19,6 +19,7 @@
 
 # RStudio files
 .Rproj.user/
+*.Rout
 
 # produced vignettes
 vignettes/*.html
@@ -65,3 +66,10 @@ vignettes/*.pdf
 *.url
 *.svn
 *.toc
+*.pdf
+*.synctex*
+
+# RDS files
+*.rds
+*.RDS
+

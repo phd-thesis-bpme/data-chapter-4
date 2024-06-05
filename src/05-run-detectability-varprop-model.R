@@ -1,9 +1,9 @@
 ####### Script Information ########################
 # Brandon P.M. Edwards
 # BBS Point Level
-# <03-run-point-detectability-model.R>
+# <05-run-detectability-varprop-model.R>
 # Created July 2023
-# Last Updated April 2024
+# Last Updated June 2024
 
 ####### Import Libraries and External Files #######
 
@@ -52,7 +52,7 @@ for (i in 1:length(species_list))
     prepare_spatial(strata_map = load_map(st))
   
   mod_prepped <- prepare_model(prepared_data = prepared_data,
-                               model_file = "models/gamye_spatial_detectability.stan", 
+                               model_file = "models/gamye_spatial_detectability_varprop.stan", 
                                model = "gamye", 
                                model_variant = "spatial")
   
@@ -191,7 +191,9 @@ for (i in 1:length(species_list))
   mod_prepped$model_data <- c(mod_prepped$model_data, detectability_data_list)
   
   model_run <- run_model(model_data = mod_prepped,
-                         output_basename = paste0(sp_code, "-detectability"),
+                         chains = 4,
+                         parallel_chains = 2,
+                         output_basename = paste0(sp_code, "-varprop"),
                          output_dir = "output/model_runs",
                          overwrite = TRUE)
 }
