@@ -351,44 +351,45 @@ if(use_pois){
       adj = 1;
     }
      retrans_noise = 0.5*(sdnoise/adj)^2;
-}else{
-  adj = 1;
-  retrans_noise = 0;
-}
-
-retrans_obs = 0.5*(sdobs^2);
-retrans_ste = 0.5*(sdste^2);
-
-// Annual indices of abundance - strata-level annual predicted counts
-
-
-for(y in 1:n_years){
-
-      for(s in 1:n_strata){
-
-  array[n_obs_sites_strata[s]] real n_t;
-  array[n_obs_sites_strata[s]] real n_smooth_t;
-  real retrans_yr = 0.5*(sdyear[s]^2);
-  real strata = (sdstrata*strata_raw[s]) + STRATA;
-
-        for(t in 1:n_obs_sites_strata[s]){  //n_obs_sites_strata max_n_obs_sites_strata
-
-  real ste = sdste*ste_raw[ste_mat[s,t]]; // site intercepts
-  real obs = sdobs*obs_raw[obs_mat[s,t]]; // site intercepts
-
-
-      n_t[t] = exp(strata+ smooth_pred[y,s] + yeareffect[s,y] + retrans_noise + obs + ste);// + retrans_obs);
-      n_smooth_t[t] = exp(strata + smooth_pred[y,s] + retrans_yr + retrans_noise + obs + ste);// + retrans_obs);
-        }
-        n[s,y] = non_zero_weight[s] * mean(n_t);//mean of exponentiated predictions across sites in a stratum
-        n_smooth[s,y] = non_zero_weight[s] * mean(n_smooth_t);//mean of exponentiated predictions across sites in a stratum
-        //using the mean of hte exponentiated values, instead of including the log-normal
-        // retransformation factor (0.5*sdste^2), because this retransformation makes 2 questionable assumptions:
-          // 1 - assumes that sdste is equal among all strata
-          // 2 - assumes that the distribution of site-effects is normal
-        // As a result, these annual indices reflect predictions of mean annual abundance within strata of the routes that are included in the stratum
-
-
+  }else{
+    adj = 1;
+    retrans_noise = 0;
+  }
+  
+  retrans_obs = 0.5*(sdobs^2);
+  retrans_ste = 0.5*(sdste^2);
+  
+  // Annual indices of abundance - strata-level annual predicted counts
+  
+  
+  for(y in 1:n_years){
+  
+    for(s in 1:n_strata){
+    
+      array[n_obs_sites_strata[s]] real n_t;
+      array[n_obs_sites_strata[s]] real n_smooth_t;
+      real retrans_yr = 0.5*(sdyear[s]^2);
+      real strata = (sdstrata*strata_raw[s]) + STRATA;
+      
+      for(t in 1:n_obs_sites_strata[s]){  //n_obs_sites_strata max_n_obs_sites_strata
+      
+        real ste = sdste*ste_raw[ste_mat[s,t]]; // site intercepts
+        real obs = sdobs*obs_raw[obs_mat[s,t]]; // site intercepts
+        
+        
+        n_t[t] = exp(strata+ smooth_pred[y,s] + yeareffect[s,y] + retrans_noise + obs + ste);// + retrans_obs);
+        n_smooth_t[t] = exp(strata + smooth_pred[y,s] + retrans_yr + retrans_noise + obs + ste);// + retrans_obs);
+      }
+      
+      n[s,y] = non_zero_weight[s] * mean(n_t);//mean of exponentiated predictions across sites in a stratum
+      n_smooth[s,y] = non_zero_weight[s] * mean(n_smooth_t);//mean of exponentiated predictions across sites in a stratum
+      //using the mean of hte exponentiated values, instead of including the log-normal
+      // retransformation factor (0.5*sdste^2), because this retransformation makes 2 questionable assumptions:
+      // 1 - assumes that sdste is equal among all strata
+      // 2 - assumes that the distribution of site-effects is normal
+      // As a result, these annual indices reflect predictions of mean annual abundance within strata of the routes that are included in the stratum
+      
+      
     }
   }
 
