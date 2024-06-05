@@ -17,7 +17,7 @@ library(lutz)
 species_list <- c("Ovenbird", "Wood Thrush","Pileated Woodpecker", 
                   "Blue-headed Vireo", "Black-throated Green Warbler", 
                   "Winter Wren", "American Goldfinch", "Eastern Wood-pewee", 
-                  "White-throated Sparrow",)
+                  "White-throated Sparrow")
 sp_code_list <- c("OVEN", "WOTH", "PIWO", "BHVI", "BTNW", "WIWR", "AMGO", 
                   "EAWP", "WTSP")
 st <- "latlong"
