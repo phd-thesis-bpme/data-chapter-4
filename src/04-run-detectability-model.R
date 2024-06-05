@@ -1,9 +1,9 @@
 ####### Script Information ########################
 # Brandon P.M. Edwards
 # BBS Point Level
-# <03-run-point-detectability-model.R>
-# Created July 2023
-# Last Updated April 2024
+# <04-run-detectability-model.R>
+# Created June 2024
+# Last Updated June 2024
 
 ####### Import Libraries and External Files #######
 
@@ -112,20 +112,6 @@ for (i in 1:length(species_list))
   q_best_model_df <- coef_distance(species = sp_code)[, c("Model", "AIC")]
   q_best_model <- q_best_model_df[which(q_best_model_df$AIC == min(q_best_model_df$AIC)), "Model"]
   
-  kappa_p <- avail_fd(species = sp_code,
-                      model = p_best_model,
-                      od = od,
-                      tssr = tssr,
-                      pairwise = TRUE,
-                      time = rep(3, times = length(od)))
-  
-  kappa_q <- percept_fd(species = sp_code,
-                        model = q_best_model,
-                        road = rep(TRUE, times = nrow(subsetted_data)),
-                        forest = subsetted_data$forest_coverage,
-                        pairwise = TRUE,
-                        distance = rep(400, times = length(od)))
-  
   p <- avail(species = sp_code,
              model = p_best_model,
              od = od,
@@ -139,45 +125,6 @@ for (i in 1:length(species_list))
                forest = subsetted_data$forest_coverage,
                pairwise = TRUE,
                distance = rep(400, times = length(od)))$q
-  
-  p_vcv <- get_vcv(species = sp_code,
-                   model_type = "rem",
-                   model_num = p_best_model)
-  q_vcv <- get_vcv(species = sp_code, 
-                   model_type = "dis", 
-                   model_num = q_best_model)
-  
-  #' Need to make an array for both kappa_p and kappa_q that contains indices which
-  #' correspond to the specific stratum-year-site combination that each value of
-  #' kappa_p and kappa_q refer to. We must do this to match the data setup in the model
-  #' for calculating n_t. In particular, this array is going to have the following dimensions:
-  #' n_strata
-  #' max_n_obs_sites_strata
-  #' n_years
-  #' Then, we can fill each entry with the index that corresponds to the specific
-  #' strata, year, and site combination (site will be obtained from ste_mat)
-  ste_mat <- mod_prepped$model_data$ste_mat
-  str_yr_ste <- paste0(mod_prepped$model_data$strat, "-",
-                       mod_prepped$model_data$year, "-",
-                       mod_prepped$model_data$site)
-  kappa_indices <- array(data = 0, dim = c(dim(ste_mat), mod_prepped$model_data$n_years))
-  
-  
-  for (y in 1:mod_prepped$model_data$n_years)
-  {
-    for (s in 1:mod_prepped$model_data$n_strata)
-    {
-      for (t in 1:mod_prepped$model_data$n_obs_sites_strata[s])
-      {
-        sys_current <- paste0(s, "-", y, "-", ste_mat[s,t])
-        if (sys_current %in% str_yr_ste)
-        {
-          kappa_indices[s,t,y] <- which(str_yr_ste == sys_current)
-        }
-
-      }
-    }
-  }
   
   detectability_data_list <- list(n_avail_covs = ncol(kappa_p),
                                   n_percept_covs = ncol(kappa_q),

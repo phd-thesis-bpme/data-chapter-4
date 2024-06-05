@@ -73,7 +73,17 @@ data {
   // So, CV folds must be nested within observers and routes
   // Could implement leave future observation style CV within observers and routes if indexing was done carefully
   
-  // Detectability data
+  
+  // Detectability and varprop related data
+  int<lower = 1> n_avail_covs; //how many covariates are being used for availability?
+  int<lower = 1> n_percept_covs; //how many covariates are being used for perceptibility?
+  
+  matrix[n_counts, n_avail_covs] kappa_p;
+  matrix[n_counts, n_percept_covs] kappa_q;
+  
+  matrix[n_avail_covs, n_avail_covs] vcv_p;
+  matrix[n_percept_covs, n_percept_covs] vcv_q;
+  
   vector[n_counts] p;
   vector[n_counts] q;
 
@@ -125,6 +135,11 @@ parameters {
 
   vector[n_knots_year] BETA_raw;//_raw;
   matrix[n_strata,n_knots_year] beta_raw;         // GAM strata level parameters
+  
+  // Detectability varprop parameters
+  vector[n_avail_covs] zeta; //varprop for availability
+  vector[n_percept_covs] xi; //varprop for perceptibility
+
 }
 
 transformed parameters {
@@ -181,6 +196,8 @@ for(s in 1:n_strata){
     }
 
     E[i] =  log(p[i] * q[i]) +
+      kappa_p[i,] * zeta +
+      kappa_q[i,] * xi +
       smooth_pred[year_tr[i],strat_tr[i]] + 
       strata + 
       yeareffect[strat_tr[i],year_tr[i]] + 
@@ -254,6 +271,9 @@ for(k in 1:n_knots_year){
 }
 strata_raw ~ icar_normal(n_strata, node1, node2);
 //sum(strata_raw) ~ normal(0,0.001*n_strata);
+
+zeta ~ multi_normal(rep_vector(0, n_avail_covs), vcv_p);
+xi ~ multi_normal(rep_vector(0, n_percept_covs), vcv_q);
 
 if(use_pois){
   count_tr ~ poisson_log(E); //vectorized count likelihood with log-transformation
