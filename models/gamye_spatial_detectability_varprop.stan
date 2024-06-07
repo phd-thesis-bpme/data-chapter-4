@@ -86,7 +86,13 @@ data {
   
   vector[n_counts] p;
   vector[n_counts] q;
-
+  
+  // Varprop related data for the not run sites
+  int<lower = 1> n_notrun; //how many sites were not run that could have been run?
+  
+  matrix[n_notrun, n_avail_covs] kappa_p_notrun;
+  matrix[n_notrun, n_percept_covs] kappa_q_notrun;
+  array[n_strata, max_n_obs_sites_strata, n_years] int kappa_indices;
 }
 
 transformed data {
@@ -105,9 +111,11 @@ transformed data {
      array[n_test] int first_year_te = first_year[test];
      array[n_test] int observer_te = observer[test];
 
-
-
-
+    // Varprop stuff for indices
+    int <lower = 1> total_counts = n_counts + n_notrun;
+    matrix[total_counts, n_avail_covs] kappa_p_all = append_row(kappa_p, kappa_p_notrun);
+    matrix[total_counts, n_percept_covs] kappa_q_all = append_row(kappa_q, kappa_q_notrun);
+    
 }
 
 
@@ -376,9 +384,12 @@ if(use_pois){
         real ste = sdste*ste_raw[ste_mat[s,t]]; // site intercepts
         real obs = sdobs*obs_raw[obs_mat[s,t]]; // site intercepts
         
+        int kappa_index = kappa_indices[s,t,y];
+        real p_adj = kappa_p_all[kappa_index, ] * zeta;
+        real q_adj = kappa_q_all[kappa_index, ] * xi;
         
-        n_t[t] = exp(strata+ smooth_pred[y,s] + yeareffect[s,y] + retrans_noise + obs + ste);// + retrans_obs);
-        n_smooth_t[t] = exp(strata + smooth_pred[y,s] + retrans_yr + retrans_noise + obs + ste);// + retrans_obs);
+        n_t[t] = exp(strata+ smooth_pred[y,s] + yeareffect[s,y] + retrans_noise + obs + ste + p_adj + q_adj);// + retrans_obs);
+        n_smooth_t[t] = exp(strata + smooth_pred[y,s] + retrans_yr + retrans_noise + obs + ste + p_adj + q_adj);// + retrans_obs);
       }
       
       n[s,y] = non_zero_weight[s] * mean(n_t);//mean of exponentiated predictions across sites in a stratum

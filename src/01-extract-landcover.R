@@ -3,7 +3,7 @@
 # BBS Point Level
 # 00c-extract-nalcms-landcover.R
 # Created March 2024
-# Last Updated April 2024
+# Last Updated June 2024
 
 ####### Import Libraries and External Files #######
 
@@ -20,7 +20,6 @@ nalcms_2020 <- rast("data/raw/spatial/nalcms/can_land_cover_2020_30m_tif/CAN_NAL
 
 bbs_sites$forest_coverage <- NA
 
-# First, get the indices that didn't work
 indices<- which(bbs_sites$year >= 2010 &
                      bbs_sites$latitude < 1000)
 
