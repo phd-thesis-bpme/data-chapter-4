@@ -21,7 +21,7 @@ model {
   
   intercept ~ normal(0,1);
   beta ~ normal(BETA, 1);
-  BETA ~ normal(1, 1);
+  BETA ~ normal(50, 1);
   sigma ~ exponential(1);
 
 }
