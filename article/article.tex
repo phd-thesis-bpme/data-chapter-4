@@ -78,7 +78,7 @@ Incorporating these offsets can serve several purposes, from correcting for road
 However, because the current BBS model considers summed counts at the route level (rather than at the individual point level), we cannot yet directly apply these offsets to BBS data. 
 
 \par In this paper, we describe an extension of the current BBS status and trend model (i.e., Equation \ref{bbs}) that considers BBS data at the point-level. 
-Using point-level (also called stop-level) data, we compare trends and trajectories of Ovenbird (SCIENTIFIC NAME) obtained through this point-level model to trends and trajectories obtained through the current route-level BBS models described in \citet{smith_spatially_2023}.
+Using point-level (also called stop-level) data, we compare trends and trajectories of Ovenbird (\textit{Seiurus aurocapilla}) obtained through this point-level model to trends and trajectories obtained through the current route-level BBS models described in \citet{smith_spatially_2023}.
 After establishing this baseline comparison, we incorporate detectability offsets into the new point-level model in two ways: first using a naive approach that considers these detectability offsets as true point values, and secondly by incorporating error associated with the derived detectability offsets and propagating forward the uncertainty using methods described in \citet{bravington_variance_2021}.
 Finally, we investigate how incorporating detectability as offsets in both of these ways affects the trends and trajectories for Ovenbird across Canada, and in particular focus on areas where there has been large landcover changes.
 
@@ -86,7 +86,7 @@ Finally, we investigate how incorporating detectability as offsets in both of th
 
 \par The following subsections describe how the current route-level description of the model can be converted to a point-level model, by taking advantage of the stop-level data provided by the United States Geological Survey and Canadian Wildlife Service. 
 We then expand this point-level model to explicitly include detectability estimates, as well as uncertainty around those estimates. 
-Finally, we demonstrate the point-level model and the detectability model by modelling counts of Ovenbird (SCIENTIFIC NAME) in Ontario from 2010 - 2022, and compare trends and trajectories from these models to trends and trajectories obtained from the route-level model in \citet{smith_spatially_2023}.
+Finally, we demonstrate the point-level model and the detectability model by modelling counts of Ovenbird in Ontario from 2010 - 2022, and compare trends and trajectories from these models to trends and trajectories obtained from the route-level model in \citet{smith_spatially_2023}.
 
 \subsection{Models}
 
@@ -128,7 +128,7 @@ In that case, we would include the term $\log(p_{j,i,t}q_{j,i,t})$ in the expone
 Alternatively, we could calculate the index of abundance under perfect detection: if we set $p = q = 1$, then $\log(p_{j,i,t}q_{j,i,t}) = \log(1) = 0$, and our original index of abundance calculation given by Equation \ref{index} holds as normal.
 For the remainder of this paper, when we calculate index of abundance from a model that incorporates detectability (i.e., either this model or the following model that propagates error) we will calculate index of abundance under perfect detection, such that the index of abundance represents the mean expected count at point $j$ in stratum $i$ during year $t$ by observer $o$, \textit{given perfect detectability}.
 
-\subsubsection{A Point-level Model that Includes Detectability and Propagates Error}
+\subsubsection{A Point-level Model that Includes Detectability and Propagates Error}\label{varprop-text}
 
 Because we are using estimated values of $p$ and $q$ (i.e., $\hat{p}$ and $\hat{q}$) from the NA-POPS database \citep{edwards_point_2023}, we must also have a way to propagate the uncertainty around these detectability estimates. \citet{bravington_variance_2021} gives us a method to propagate uncertainty for a detectability offset into a GAM model. Consider the general log offset term $\log(p q)$. Following \citet{bravington_variance_2021}, we can rewrite this offset term as follows:
 
@@ -138,28 +138,8 @@ Because we are using estimated values of $p$ and $q$ (i.e., $\hat{p}$ and $\hat{
 	 
 \par Here, $log(\hat{p} \hat{q})$ is the log offset term with the estimated availability $\hat{p}$ and perceptibility $\hat{q}$ from NA-POPS. 
 We also introduce two additional sets of terms: $\kappa^{(p)}\zeta + O(\zeta^2)$ and $\kappa^{(q)}\xi + O(\xi^2)$, which are the corresponding uncertainty propagation terms for availability and perceptibility, respectively.  
-The parameters $\zeta$ and $\xi$ are basis coefficients for the variance propagation for $\hat{p}$ and $\hat{q}$, respectively, and play a similar role to that played by the basis coefficients in the GAM model \citep{bravington_variance_2021}. 
-In a Bayesian context, we have that $\zeta \sim N(\boldsymbol{0}, \boldsymbol{V_p})$, where $V_p$ is the covariance matrix for $\hat{p}$, and $\xi \sim N(\boldsymbol{V_q})$, where $V_q$ is the covariance matrix for $\hat{q}$.
-
-\par The design matrices for $\zeta$ and $\xi$, denoted here as $\kappa^{(p)}$ and $\kappa^{(q)}$, are both vectors that are obtained by taking the first partial derivatives of the log probabilities $p$ and $q$ and evaluating these at $\theta = \hat{\theta}$, i.e. at its maximum likelihood estimation. 
-From \citet{solymos_calibrating_2013}, we have that availability $p(\theta) = 1 - \exp\left\{-t\phi\right\}$, where $\phi = \exp\left(\theta\right)$ represents the cue rate for a given species, regressed against various factors that affect cue rate (such as ordinal day, time since sunrise, or their quadratic terms). 
-If we have a vector {\boldmath$\beta$} of $S$ parameters and a design matrix $X$, we can set $\theta = X\boldsymbol{\beta}$, and find that the first partial derivative with respect to $\beta_s$, $s \in \left[0, S\right]$, and hence the $s$th entry of the design matrix $\kappa^{(p)}$, is given by
-\begin{equation*}\label{kappa_p}
-	\kappa_{s}^{(p)} = \left.\dfrac{\partial \log p(\theta)}{\partial \beta_s}\right\vert_{\theta = \hat{\theta}} = \left. X_s \times \dfrac{t \exp\left\{X\boldsymbol{\beta}\right\}}{\exp\left\{t \exp\left\{X\boldsymbol{\beta}\right\}\right\} - 1} \right\vert_{\beta = \hat{\beta}}
-\end{equation*}
-	
-\par If we now consider perceptibility, from \citet{solymos_calibrating_2013}, we have that perceptibility $q(\theta) = \dfrac{\pi \tau^2 \left\{1 - \exp\left(\dfrac{-r^2}{\tau^2}\right)\right\}}{\pi r^2}$, where $\tau = \exp(\theta)$ represents the effective detection radius for a given species, regressed against various factors that could effect effective detection radius (such as survey roadside status and forest coverage). 
-If we have a vector {\boldmath$\beta$} of $S$ parameters and a design matrix $X$, we can set $\theta = X\boldsymbol{\beta}$, and find that the first partial derivative with respect to $\beta_s$, $s \in \left[0, S\right]$, and hence the $s$th entry of the design matrix $\kappa^{(q)}$, is given by
-
-\begin{equation*}\label{kappa_q}
-	\kappa_{s}^{(q)} = \left. \dfrac{\partial \log q(\theta)}{\partial \beta_s} \right\vert_{\theta = \hat{\theta}}= \left. X_s \left[\dfrac{{e^{-2X\boldsymbol{\beta}}} {2 \pi  e^{2X\boldsymbol{\beta}}} {\left(1 - e^{r^2 \left(-e^{-2X\boldsymbol{\beta}}\right)}\right)} - {2\pi r^2} {e^{r^2 \left(-e^{-2X\boldsymbol{\beta}}\right)}}}             {\pi {1-e^{r^2 \left(-e^{-2X\boldsymbol{\beta}}\right)}}}\right]  - log(\pi^2r^2) \right\vert_{\beta = \hat{\beta}}
-\end{equation*}
-
-\par Finally, the terms $O(\zeta^2)$ and $O(\xi^2)$ arise from the Taylor approximations that are used to arrive at Equation \ref{offset} \citep{bravington_variance_2021}. 
-Since we only use the Taylor approximations up to the 2nd term of the Taylor series, our offset term is asymptotically accurate to $O(\zeta^2) + O(\xi^2) = O(\zeta^2 + \xi^2)$.
-However, for the purposes of modelling in a Bayesian context, we can ignore these terms.
-
-Putting everything together, we arrive at the following point-level model that includes the log offset term and variance propagation terms:
+See Appendix A for full details of the derivation of these terms.
+Our BBS model that includes detectability and variance propagation terms is then given by
 \begin{equation}\label{bbs_varprop}
 	\log(\lambda_{j,i,t}) = \log(\hat{p} \hat{q})_{j,i,t} + \kappa_{j,i,t}^{(p)}\zeta + \kappa_{j,i,t}^{(q)}\xi + \alpha_i + \delta_{i,t} + \gamma_{i,t} + \psi_j + \omega_o + \eta I(o,j,t) + \epsilon_{j,i,t,o} \\
 \end{equation}
@@ -276,5 +256,64 @@ All models were run on one of two multi-core processing servers, one running Ubu
 
 	\bibliography{refs}
 	
-\section{Appendix A}
+\section{Appendix A Expanding on the Derivation of the BBS Model with Variance Propagation}
+
+\par As discussed in Section \ref{varprop-text}, we can expand the BBS model from Equation \ref{bbs-detect} to propagate forward the variance from detectability estimates, by adding in the variance propagation terms $	\log(pq) = log(\hat{p} \hat{q}) + \kappa^{(p)}\zeta + O(\zeta^2) + \kappa^{(q)}\xi + O(\xi^2)$.
+Here, we provide detailed derivations of this term.
+We note that these are nearly the exact same derivations as outlined in \citet{bravington_variance_2021}, but we include them here for the sake of completeness.
+
+\par First, we start with $\log(pq) = \log(p) + \log(q)$.
+We will only work on the $\log(p)$ term here to start. 
+If we rewrite $\log(p) = \log(\hat{p}) + \log(p) - \log(\hat{p})$, we can then perform a Taylor expansion of $\log(\hat{p}) = \log p(\hat{\theta})$ about $\theta_0$, the true and unknown value of $\theta$:
+
+$$\log p(\hat{\theta}) = \log p(\theta_0) + \left( \hat{\theta} - \theta_0 \right)^T \dot \\ \left[ \dfrac{\partial \log p({\theta_0})}{\partial {\theta_0}}  \right] + O(\hat{\theta} - \theta_0)^2. $$
+
+If we substitute the above into $\log(p) = \log(\hat{p}) + \log(p) - \log(\hat{p})$, we get:
+
+$$	\log(p)  = \log(\hat{p}) + \log(p) - \log(\hat{p}) $$
+$$ = \log p(\theta_0) + \left( \hat{\theta} - \theta_0 \right)^T \dot \\ \left[ \dfrac{\partial \log p({\theta_0})}{\partial {\theta_0}}  \right] + O(\hat{\theta} - \theta_0)^2 + \log(p) - $$
+$$ \left[ \log p(\theta_0) + \left( \hat{\theta} - \theta_0 \right)^T \dot \\ \left[ \dfrac{\partial \log p({\theta_0})}{\partial {\theta_0}}  \right] + O(\hat{\theta} - \theta_0)^2  \right] $$
+
+$$ = \log p(\theta_0) + \left( \hat{\theta} - \theta_0 \right)^T \dot \\ \left[ \dfrac{\partial \log p({\theta_0})}{\partial {\theta_0}}  \right] + O(\hat{\theta} - \theta_0)^2 + $$
+$$\log p(\hat{\theta}) - \left( \hat{\theta} - \theta_0 \right)^T \dot \\ \left[ \dfrac{\partial \log p({\theta_0})}{\partial {\theta_0}}  \right] - O(\hat{\theta} - \theta_0)^2 $$
+$$ - \log p(\theta_0) - \left( \hat{\theta} - \theta_0 \right)^T \dot \\ \left[ \dfrac{\partial \log p({\theta_0})}{\partial {\theta_0}}  \right] - O(\hat{\theta} - \theta_0)^2  $$
+
+$$ = \log p(\hat{\theta}) - \left( \hat{\theta} - \theta_0 \right)^T \dot \\ \left[ \dfrac{\partial \log p({\theta_0})}{\partial {\theta_0}}  \right] - O(\hat{\theta} - \theta_0)^2. $$
+
+As in \citet{bravington_variance_2021}, we will define $\zeta = \hat{\theta} - \theta_0$ and $\kappa^{(p)} = \left[ \dfrac{\partial \log p({\theta_0})}{\partial {\theta_0}}  \right]$ so that the above becomes
+
+$$\log(p) = \log p(\hat{\theta}) + \zeta\kappa^{(p)} + O(\hat{\theta} - \theta_0)^2.$$
+
+We can now see that we have introduced the estimated availability (i.e., $\log p(\hat{\theta})$) and as a result of the Taylor expansion we have introduced the variance propagation term $\zeta\kappa^{(p)}$.
+
+\par It follows that if we now perform the same expansions to $\log(q)$, we would get that $\log(q) = \log q(\hat{\theta}) + \xi\kappa^{(q)} + O(\hat{\theta} - \theta_0)^2$ with $\xi$ and $\kappa^{(q)}$ similarly defined.
+
+\par The parameters $\zeta$ and $\xi$ are basis coefficients for the variance propagation for $\hat{p}$ and $\hat{q}$, respectively, and play a similar role to that played by the basis coefficients in the GAM model \citep{bravington_variance_2021}. 
+In a Bayesian context, we have that $\zeta \sim N(\boldsymbol{0}, \boldsymbol{V_p})$, where $V_p$ is the covariance matrix for $\hat{p}$, and $\xi \sim N(\boldsymbol{V_q})$, where $V_q$ is the covariance matrix for $\hat{q}$.
+
+\par The design matrices for $\zeta$ and $\xi$, denoted here as $\kappa^{(p)}$ and $\kappa^{(q)}$, are both vectors that are obtained by taking the first partial derivatives of the log probabilities $p$ and $q$ and evaluating these at $\theta = \hat{\theta}$, i.e. at its maximum likelihood estimation. 
+From \citet{solymos_calibrating_2013}, we have that availability $p(\theta) = 1 - \exp\left\{-t\phi\right\}$, where $\phi = \exp\left(\theta\right)$ represents the cue rate for a given species, regressed against various factors that affect cue rate (such as ordinal day, time since sunrise, or their quadratic terms). 
+If we have a vector {\boldmath$\beta$} of $S$ parameters and a design matrix $X$, we can set $\theta = X\boldsymbol{\beta}$, and find that the first partial derivative with respect to $\beta_s$, $s \in \left[0, S\right]$, and hence the $s$th entry of the design matrix $\kappa^{(p)}$, is given by
+\begin{equation*}\label{kappa_p}
+	\kappa_{s}^{(p)} = \left.\dfrac{\partial \log p(\theta)}{\partial \beta_s}\right\vert_{\theta = \hat{\theta}} = \left. X_s \times \dfrac{t \exp\left\{X\boldsymbol{\beta}\right\}}{\exp\left\{t \exp\left\{X\boldsymbol{\beta}\right\}\right\} - 1} \right\vert_{\beta = \hat{\beta}}
+\end{equation*}
+
+\par If we now consider perceptibility, from \citet{solymos_calibrating_2013}, we have that perceptibility $q(\theta) = \dfrac{\pi \tau^2 \left\{1 - \exp\left(\dfrac{-r^2}{\tau^2}\right)\right\}}{\pi r^2}$, where $\tau = \exp(\theta)$ represents the effective detection radius for a given species, regressed against various factors that could effect effective detection radius (such as survey roadside status and forest coverage). 
+If we have a vector {\boldmath$\beta$} of $S$ parameters and a design matrix $X$, we can set $\theta = X\boldsymbol{\beta}$, and find that the first partial derivative with respect to $\beta_s$, $s \in \left[0, S\right]$, and hence the $s$th entry of the design matrix $\kappa^{(q)}$, is given by
+
+\begin{equation*}\label{kappa_q}
+	\kappa_{s}^{(q)} = \left. \dfrac{\partial \log q(\theta)}{\partial \beta_s} \right\vert_{\theta = \hat{\theta}}= \left. X_s \left[\dfrac{{e^{-2X\boldsymbol{\beta}}} {2 \pi  e^{2X\boldsymbol{\beta}}} {\left(1 - e^{r^2 \left(-e^{-2X\boldsymbol{\beta}}\right)}\right)} - {2\pi r^2} {e^{r^2 \left(-e^{-2X\boldsymbol{\beta}}\right)}}}             {\pi {1-e^{r^2 \left(-e^{-2X\boldsymbol{\beta}}\right)}}}\right]  - log(\pi^2r^2) \right\vert_{\beta = \hat{\beta}}
+\end{equation*}
+
+\par Finally, the terms $O(\zeta^2)$ and $O(\xi^2)$ arise from the Taylor approximations that are used to arrive at Equation \ref{offset} \citep{bravington_variance_2021}. 
+Since we only use the Taylor approximations up to the 2nd term of the Taylor series, our offset term is asymptotically accurate to $O(\zeta^2) + O(\xi^2) = O(\zeta^2 + \xi^2)$.
+However, for the purposes of modelling in a Bayesian context, we can ignore these terms.
+
+Putting everything together, we arrive at the following point-level model that includes the log offset term and variance propagation terms:
+\begin{equation*}
+	\log(\lambda_{j,i,t}) = \log(\hat{p} \hat{q})_{j,i,t} + \kappa_{j,i,t}^{(p)}\zeta + \kappa_{j,i,t}^{(q)}\xi + \alpha_i + \delta_{i,t} + \gamma_{i,t} + \psi_j + \omega_o + \eta I(o,j,t) + \epsilon_{j,i,t,o} \\
+\end{equation*}
+
+as in Equation \ref{bbs_varprop}.
+
 \end{document}
