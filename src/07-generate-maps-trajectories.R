@@ -49,16 +49,23 @@ for (sp in sp_list)
   
   png(filename = paste0("output/plots/", sp, "-map.png"),
       width = 20, height = 15, units = "in", res = 300)
-  ggarrange(trend_map_route, trend_map_point, 
-            trend_map_detectability, trend_map_varprop, nrow = 2, ncol = 2,
+  ggarrange(trend_map_route, trend_map_point, trend_map_varprop, nrow = 1,
             labels = c("Route", "Point", "Detectability", "Varprop"))
   dev.off()
   
   png(filename = paste0("output/plots/", sp, "-trajectory.png"),
       width = 20, height = 15, units = "in", res = 300)
-  ggarrange(indices_plot_route$continent, indices_plot_point$continent,
-            indices_plot_detectability$continent, indices_plot_varprop$continent,
-            nrow = 2, ncol = 2,
+  ggarrange(indices_plot_route$continent, indices_plot_point$continent, indices_plot_varprop$continent,
+            nrow = 1,
             labels = c("Route", "Point", "Detectability", "Varprop"))
   dev.off()  
+  
+  png(filename = paste0("output/plots/", sp, "-combined.png"),
+      width = 8.5, height = 11, units = "in", res = 300)
+  ggarrange(  ggarrange(trend_map_route, trend_map_point, trend_map_varprop, ncol = 1),
+              ggarrange(indices_plot_route$continent, indices_plot_point$continent, indices_plot_varprop$continent,
+                        ncol = 1,
+                        labels = c("Route", "Point", "Varprop")),
+              common.legend = TRUE)
+  dev.off()
 }

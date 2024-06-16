@@ -3,7 +3,7 @@
 # BBS Point Level
 # <08-route-vs-point.R>
 # Created April 2024
-# Last Updated April 2024
+# Last Updated June 2024
 
 ####### Import Libraries and External Files #######
 
@@ -60,6 +60,20 @@ index_mod_summary <- index_comp_model_run$summary()
 
 indices_slope_plot <- bayesplot::mcmc_areas(index_comp_model_run$draws("BETA"), prob = 0.95)
 
+index_comp_model_draws <- index_comp_model_run$draws(variables = c("intercept", "BETA"), format = "df")
+
+to_plot <- data.frame(point = index_model_data$point_index,
+                      route = index_model_data$route_index)
+indices_comp_plot <- ggplot(data = to_plot, aes(x = point, y = route)) + 
+  geom_point(alpha = 0.05) +
+  geom_abline(intercept = index_comp_model_draws$intercept, slope = index_comp_model_draws$BETA, color = "red", alpha = 0.01) +
+  geom_abline(intercept = mean(index_comp_model_draws$intercept),
+              slope = mean(index_comp_model_draws$BETA),
+              color = "red", size = 1) +
+  xlab("Index of Abundance (Point Model)") +
+  ylab("Index of Abundance (Route Model)") +
+  NULL
+
 ####### Compare Trends ############################
 
 route_indices$indices <- route_indices$indices[which(route_indices$indices$region %in% regions_both), ]
@@ -89,3 +103,24 @@ trend_mod_summary <- trend_comp_model_run$summary()
 
 trend_slope_plot <- bayesplot::mcmc_areas(trend_comp_model_run$draws(c("intercept", "beta")), prob = 0.95)
 
+trend_comp_model_draws <- trend_comp_model_run$draws(variables = c("intercept", "beta"), format = "df")
+
+to_plot <- data.frame(point = trend_model_data$point_trend,
+                      route = trend_model_data$route_trend)
+trend_comp_plot <- ggplot(data = to_plot, aes(x = point, y = route)) + 
+  geom_point(alpha = 0.3) +
+  geom_abline(intercept = trend_comp_model_draws$intercept, slope = trend_comp_model_draws$beta, color = "red", alpha = 0.01) +
+  geom_abline(intercept = mean(trend_comp_model_draws$intercept),
+              slope = mean(trend_comp_model_draws$beta),
+              color = "red", size = 1) +
+  xlab("Trend (Point Model)") +
+  ylab("Trend (Route Model)") +
+  NULL
+
+####### Output ####################################
+
+png(filename = "output/plots/route-vs-point.png",
+    width = 6, height = 3, res = 300, units = "in")
+ggarrange(indices_comp_plot, trend_comp_plot, nrow = 1,
+          labels = c("A", "B"))
+dev.off()

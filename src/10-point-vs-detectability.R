@@ -18,10 +18,10 @@ sp <- "OVEN"
 ####### Read Data #################################
 
 point_model <- readRDS(paste0("output/model_runs/", sp, "-point.rds"))
-detectability_model <- readRDS(paste0("output/model_runs/", sp, "-detectability.rds"))
+detectability_model <- readRDS(paste0("output/model_runs/", sp, "-varprop.rds"))
 
 point_indices <- readRDS(paste0("output/indices/", sp, "_point.RDS"))
-detect_indices <- readRDS(paste0("output/indices/", sp, "_detectability.RDS"))
+detect_indices <- readRDS(paste0("output/indices/", sp, "_varprop.RDS"))
 
 nalcms_2010 <- rast("data/raw/spatial/nalcms/CAN_Land_cover_2010v2_30m_TIF/CAN_NALCMS_landcover_2010v2_30m/data/CAN_NALCMS_landcover_2010v2_30m.tif")
 nalcms_2015 <- rast("data/raw/spatial/nalcms/can_land_cover_2015v3_30m_tif/CAN_NALCMS_landcover_2015v3_30m/data/CAN_NALCMS_landcover_2015v3_30m.tif")
