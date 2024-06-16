@@ -1,9 +1,9 @@
 ####### Script Information ########################
 # Brandon P.M. Edwards
 # BBS Point Level
-# 08-extract-varprop-parameters.R
+# 09-varprop-diagnostics.R
 # Created May 2024
-# Last Updated May 2024
+# Last Updated June 2024
 
 ####### Import Libraries and External Files #######
 

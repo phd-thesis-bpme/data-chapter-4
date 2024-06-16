@@ -2,7 +2,7 @@
 # Brandon P.M. Edwards
 # BBS Point Level
 # <05-run-detectability-varprop-model.R>
-# Created July 2023
+# Created June 2024
 # Last Updated June 2024
 
 ####### Import Libraries and External Files #######

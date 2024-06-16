@@ -1,9 +1,9 @@
 ####### Script Information ########################
 # Brandon P.M. Edwards
 # BBS Point Level
-# <06-model-comparison-plot.R>
+# <07-generate-maps-trajectories.R>
 # Created April 2024
-# Last Updated April 2024
+# Last Updated June 2024
 
 ####### Import Libraries and External Files #######
 

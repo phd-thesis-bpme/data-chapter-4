@@ -1,7 +1,7 @@
 ####### Script Information ########################
 # Brandon P.M. Edwards
 # BBS Point Level
-# 00c-extract-nalcms-landcover.R
+# 01-extract-landcover.R
 # Created March 2024
 # Last Updated June 2024
 

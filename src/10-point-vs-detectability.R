@@ -1,7 +1,7 @@
 ####### Script Information ########################
 # Brandon P.M. Edwards
 # BBS Point Level
-# <06-fc-change-hotspot.R>
+# <10-point-vs-detectability.R>
 # Created March 2024
 # Last Updated May 2024
 

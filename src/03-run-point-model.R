@@ -1,7 +1,7 @@
 ####### Script Information ########################
 # Brandon P.M. Edwards
 # BBS Point Level
-# <02-run-point-model.R>
+# <03-run-point-model.R>
 # Created June 2023
 # Last Updated April 2024
 

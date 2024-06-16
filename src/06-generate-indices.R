@@ -1,7 +1,7 @@
 ####### Script Information ########################
 # Brandon P.M. Edwards
 # BBS Point Level
-# <05-generate-indices.R>
+# <06-generate-indices.R>
 # Created December 2023
 # Last Updated June 2024
 
