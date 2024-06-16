@@ -19,13 +19,13 @@ sp <- "OVEN"
 
 ####### Read Data #################################
 
-detectability_model <- readRDS(paste0("output/model_runs/", sp, "-detectability.rds"))
+varprop_model <- readRDS(paste0("output/model_runs/", sp, "-varprop.rds"))
 
 ####### Main Code #################################
 
-avail_plot <- bayesplot::mcmc_areas(detectability_model$model_fit$draws("zeta")) 
+avail_plot <- bayesplot::mcmc_areas(varprop_model$model_fit$draws("zeta")) 
 
-percept_plot <- bayesplot::mcmc_areas(detectability_model$model_fit$draws("xi")) +
+percept_plot <- bayesplot::mcmc_areas(varprop_model$model_fit$draws("xi")) +
   scale_y_discrete(labels = c("Intercept","Forest","Road","RoadForest"))
 
 ####### Output ####################################
