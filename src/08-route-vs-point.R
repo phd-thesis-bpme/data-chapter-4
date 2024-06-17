@@ -66,12 +66,12 @@ to_plot <- data.frame(point = index_model_data$point_index,
                       route = index_model_data$route_index)
 indices_comp_plot <- ggplot(data = to_plot, aes(x = point, y = route)) + 
   geom_point(alpha = 0.05) +
-  geom_abline(intercept = index_comp_model_draws$intercept, slope = index_comp_model_draws$BETA, color = "red", alpha = 0.01) +
+  geom_abline(intercept = index_comp_model_draws$intercept, slope = index_comp_model_draws$BETA, color = "grey", alpha = 0.1) +
   geom_abline(intercept = mean(index_comp_model_draws$intercept),
               slope = mean(index_comp_model_draws$BETA),
-              color = "red", size = 1) +
-  xlab("Index of Abundance (Point Model)") +
-  ylab("Index of Abundance (Route Model)") +
+              color = "black", size = 1) +
+  xlab("Index of Abundance (POINT)") +
+  ylab("Index of Abundance (ROUTE)") +
   NULL
 
 ####### Compare Trends ############################
@@ -109,12 +109,12 @@ to_plot <- data.frame(point = trend_model_data$point_trend,
                       route = trend_model_data$route_trend)
 trend_comp_plot <- ggplot(data = to_plot, aes(x = point, y = route)) + 
   geom_point(alpha = 0.3) +
-  geom_abline(intercept = trend_comp_model_draws$intercept, slope = trend_comp_model_draws$beta, color = "red", alpha = 0.01) +
+  geom_abline(intercept = trend_comp_model_draws$intercept, slope = trend_comp_model_draws$beta, color = "grey", alpha = 0.1) +
   geom_abline(intercept = mean(trend_comp_model_draws$intercept),
               slope = mean(trend_comp_model_draws$beta),
-              color = "red", size = 1) +
-  xlab("Trend (Point Model)") +
-  ylab("Trend (Route Model)") +
+              color = "black", size = 1) +
+  xlab("Trend (POINT)") +
+  ylab("Trend (ROUTE)") +
   NULL
 
 ####### Output ####################################

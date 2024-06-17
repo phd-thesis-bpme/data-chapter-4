@@ -11,7 +11,7 @@ library(cmdstanr)
 library(bayesplot)
 library(ggpubr)
 theme_set(theme_pubclean())
-bayesplot::color_scheme_set("red")
+bayesplot::color_scheme_set("gray")
 
 ####### Set Constants #############################
 
@@ -65,13 +65,13 @@ model_draws <- model_run$draws(variables = c("intercept", "BETA"), format = "df"
 to_plot <- data.frame(detect = model_data$detect_index,
                       varprop = model_data$varprop_index)
 comp_plot <- ggplot(data = to_plot, aes(x = detect, y = varprop)) + 
-  geom_abline(intercept = model_draws$intercept, slope = model_draws$BETA, color = "red", alpha = 0.01) +
+  geom_abline(intercept = model_draws$intercept, slope = model_draws$BETA, color = "grey", alpha = 0.1) +
   geom_abline(intercept = mean(model_draws$intercept),
               slope = mean(model_draws$BETA),
               color = "black", size = 1) +
   geom_point(alpha = 0.1) +
-  xlab("Index of Abundance (Detect Model)") +
-  ylab("Index of Abundance (Varprop Model)") +
+  xlab("Index of Abundance (DETECT)") +
+  ylab("Index of Abundance (VARPROP)") +
   NULL
 
 ####### Varprop Parameters ########################
