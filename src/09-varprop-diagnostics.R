@@ -76,6 +76,8 @@ comp_plot <- ggplot(data = to_plot, aes(x = detect, y = varprop)) +
 
 ####### Varprop Parameters ########################
 
+varprop_summary <- varprop_model$model_fit$summary(variables = c("zeta", "xi"))
+
 avail_plot <- bayesplot::mcmc_areas(varprop_model$model_fit$draws("zeta")) +
   scale_y_discrete(labels = c("Intercept", "Ordinal Day", "(Ordinal Day)^2"))
 
@@ -83,6 +85,9 @@ percept_plot <- bayesplot::mcmc_areas(varprop_model$model_fit$draws("xi")) +
   scale_y_discrete(labels = c("Intercept","Forest","Road","RoadForest"))
 
 ####### Output ####################################
+
+write.table(x = mod_summary, file = "output/varprop_comparison_mod.csv", sep = ",", row.names = FALSE)
+write.table(x = varprop_summary, file = "output/varprop_summary.csv", sep = ",", row.names = FALSE)
 
 png(filename = paste0("output/plots/varprop-diagnostics.png"),
     width = 6, height = 4, res = 600, units = "in")

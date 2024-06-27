@@ -88,7 +88,7 @@ Finally, we investigate how incorporating detectability as offsets in both of th
 
 \par The following subsections describe how the current route-level description of the model can be converted to a point-level model, by taking advantage of the stop-level data provided by the United States Geological Survey and Canadian Wildlife Service. 
 We then expand this point-level model to explicitly include detectability estimates, as well as uncertainty around those estimates. 
-Finally, we demonstrate the point-level model and the detectability model by modelling counts of Ovenbird in Ontario from 2010 - 2022, and compare trends and trajectories from these models to trends and trajectories obtained from the route-level model in \citet{smith_spatially_2023}.
+Finally, we demonstrate the point-level model and the detectability model by modelling counts of Ovenbird in Canada from 2010 - 2022, and compare trends and trajectories from these models to trends and trajectories obtained from the route-level model in \citet{smith_spatially_2023}.
 
 \subsection{Models}
 
@@ -171,7 +171,7 @@ Instead, we simply set all points to be roadside surveys for the purposes of est
 
 \par We used the R package \texttt{napops} to calculate the value of availability $\hat{p}$ and perceptibility $\hat{q}$ at each point.
 To obtain availability, we needed to have the time at which a point was run, and the day of the year that it was run.
-Day of the year was trivially calculated as days since 1 January of that year.
+Day of the year was calculated as days since 1 January of that year.
 Time of day was calculated as follows: given the start time and end time of a BBS route (which is available with the data download), we partitioned this duration of time into the number of points run for that particular route.
 We note that normally the number of points run per route should be 50, but there is flexibility in what is considered a "complete" route.
 These partitioned times were then used as estimated start times for each of the points. 
@@ -253,6 +253,43 @@ All models were run on one of two multi-core processing servers, one running Ubu
 
 \section{Results}
 
+\par Using the ROUTE, POINT, and VARPROP model output, we generated trends and trajectories for Ovenbird in Canada from 2010 - 2022 (Figure \ref{fig:oven-combined}).
+The calculated trends among the three models were similar to each other: trend from the ROUTE model was an increase of $0.65\%$ with a 90\% credible interval of $[0.11, 1.24]$; trend from the POINT model was an increase of $1.48\%$ with a 90\% credible interval of $[0.57, 1.73]$; and trend from the VARPROP model was an increase of $0.82\%$ with a 90\% credible interval of $[0.26, 1.39]$.
+We note that the y-axis of the three time series in Figure \ref{fig:oven-combined} are rather different from each other: the y-axis for the ROUTE time series is the expected number of observed Ovenbirds on an average route; the y-axis for the POINT time series is the expected number of observed Ovenbirds on an average point; the y-axis for the VARPROP time series is the expected number of observed Ovenbirds on an average 400 m radius point, given perfect detectability.
+
+\par For Ovenbird, the POINT model appeared to be a reasonable proxy for the standard ROUTE model.
+On average, indices of abundance from a ROUTE model were approximately 52.3 times the indices from the POINT model, with a 90\% credible interval of $[51.9, 52.7]$ (Figure \ref{fig:route-vs-point}A).
+This was slightly greater than our hypothesized value of 50, but note that this could be due to some routes having fewer than 50 points.
+Mean values of this slope for individual strata ranged from 44.9 to 64.9.
+Trends from each stratum tended to closely match between the ROUTE and POINT model, with an estimated slope of 0.96, with a 90\% credible interval of $[0.93, 0.99]$ (Figure \ref{fig:route-vs-point}B).
+This was slightly less than our hypothesized value of 1, indicating that there is not quite a 1-to-1 relationship (but close).
+
+\subsection{Variance Propagation Diagnostics}
+
+\par When comparing indices between DETECT and VARPROP models, we found an overall 1-to-1 correspondence, with an overall modelled slope value of $1.00$ and 90\% credible interval of $[0.88, 1.12]$ (Figure \ref{fig:varprop-diagnostics}A).
+This indicated that overall, there was not a large difference in indices obtained from VARPROP model compared to the DETECT model, although these slopes did vary among strata from anywhere between $0.57$ to $1.24$.
+
+\par Removal model variance propagation parameters (i.e., $\zeta$ in Equation \ref{bbs_varprop}) were all effectively zero (Figure \ref{fig:varprop-diagnostics}B), but with varying degrees of uncertainty.
+On the other hand, distance model variance propagation parameters (i.e.,, $\xi$ in Equation \ref{bbs_varprop}) were nonzero for terms that included information about forest coverage, close to zero for the road parameter term, and effectively zero for the intercept term (Figure \ref{fig:varprop-diagnostics}C).
+
+\subsection{Effects of Changing Detectability on Trend}
+\par We found an positive relationship (slope = $10.0$ with 90\% credible interval of $[8.75, 11.3]$) between change in forest coverage and the difference between the VARPROP and POINT trend.
+Put differently, strata with an average decrease in forest coverage are associated with a negative difference in trend, meaning that for strata with a decrease in forest coverage, the VARPROP model will show a more negative trend than the point model.
+As such, strata with an average increase in forest coverage are associated with positive difference in trend, meaning that for strata with an increase in forest coverage, the VARPROP model will show a more positive trend than the point model.
+
+\par This relationship can be seen by focusing in on a route that has experienced a particularly large amount of forest coverage loss over the last decade, such as the one seen in Figure \ref{fig:route-change}A. 
+If detectability is not accounted for, such as with the POINT model, we estimate a trend of $-1.50$ (Figure \ref{fig:route-change}B), whereas if detectability is accounted for (due to changes in forest coverage), we estimate a much more negative trend of $-7.92$ (Figure \ref{fig:route-change}C).
+
+
+
+
+\section{Discussion}
+
+
+	\bibliography{refs}
+
+\section{Figures}
+
 \begin{figure}[h]
 	\includegraphics{../output/plots/OVEN-combined.png}
 	\caption{TO DO}
@@ -277,13 +314,11 @@ All models were run on one of two multi-core processing servers, one running Ubu
 	\label{fig:trend-vs-forest}
 \end{figure}
 
-
-
-\section{Discussion}
-
-
-	\bibliography{refs}
-
+\begin{figure}[h]
+	\includegraphics{../output/plots/route-level-change.png}
+	\caption{TO DO}
+	\label{fig:route-change}
+\end{figure}
 
 	
 \section{Appendix A Expanding on the Derivation of the BBS Model with Variance Propagation}

@@ -109,6 +109,8 @@ comp_plot <- ggplot(data = to_plot, aes(x = fc, y = trend)) +
 
 ####### Output ####################################
 
+write.table(x = mod_summary, file = "output/forest-vs-trend.csv", sep = ",", row.names = FALSE)
+
 png(filename = paste0("output/plots/trend-vs-forest.png"),
     width = 6, height = 4, res = 600, units = "in")
 print(comp_plot)
