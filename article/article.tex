@@ -270,7 +270,7 @@ This was slightly less than our hypothesized value of 1, indicating that there i
 This indicated that overall, there was not a large difference in indices obtained from VARPROP model compared to the DETECT model, although these slopes did vary among strata from anywhere between $0.57$ to $1.24$.
 
 \par Removal model variance propagation parameters (i.e., $\zeta$ in Equation \ref{bbs_varprop}) were all effectively zero (Figure \ref{fig:varprop-diagnostics}B), but with varying degrees of uncertainty.
-On the other hand, distance model variance propagation parameters (i.e.,, $\xi$ in Equation \ref{bbs_varprop}) were nonzero for terms that included information about forest coverage, close to zero for the road parameter term, and effectively zero for the intercept term (Figure \ref{fig:varprop-diagnostics}C).
+On the other hand, distance model variance propagation parameters (i.e., $\xi$ in Equation \ref{bbs_varprop}) were nonzero for terms that included information about forest coverage, close to zero for the road parameter term, and effectively zero for the intercept term (Figure \ref{fig:varprop-diagnostics}C).
 
 \subsection{Effects of Changing Detectability on Trend}
 \par We found an positive relationship (slope = $10.0$ with 90\% credible interval of $[8.75, 11.3]$) between change in forest coverage and the difference between the VARPROP and POINT trend.
@@ -280,10 +280,32 @@ As such, strata with an average increase in forest coverage are associated with 
 \par This relationship can be seen by focusing in on a route that has experienced a particularly large amount of forest coverage loss over the last decade, such as the one seen in Figure \ref{fig:route-change}A. 
 If detectability is not accounted for, such as with the POINT model, we estimate a trend of $-1.50$ (Figure \ref{fig:route-change}B), whereas if detectability is accounted for (due to changes in forest coverage), we estimate a much more negative trend of $-7.92$ (Figure \ref{fig:route-change}C).
 
-
-
-
 \section{Discussion}
+
+\par In this paper, we described how to model BBS data at the point (or stop) level to produce trend estimates using similar model structure to current route-level trend estimates as in \citet{smith_spatially_2023}.
+We then expanded upon this point-level trend model by introducing a detectability term that allows for detection probability to explicitly be accounted for in BBS trend estimation.
+Because the detection probabilities are estimated based on data in a previous model \citep{edwards_point_2023}, we used a variance propagation technique put forth by \citet{bravington_variance_2021} to explicitly incorporate the deteciton probability error into the trend model.
+Finally, we applied these models in a case study by examining Ovenbird trends in Canada from 2010 - 2022, and assessed how these trends differ by accounting for detectability given changes in landcover over time.
+Here, we will mostly discuss the results of the Ovenbird case study and implications of the differences in trends between each of the models.
+However, we will suggest future avenues and applications of this extended BBS model, including implications for data integration.
+
+\subsection{Point-level Model as a Reasonable Proxy for Route-level Model}
+
+\par Overall, the point-level trend model served as a reasonable proxy for the status-quo route-level trend model for Ovenbird.
+We expected that indices from the route-level model should be approximately 50x the indices from the point-level model within the same stratum, because there are typically 50 points per route.
+We found this to be mostly true, although the ratio tended to be slightly greater than 50.
+However, this is likely because 50 is the maximum number of points that would be run per route, and any difference from 50 is necessarily fewer points per route, meaning that the ratio may be slightly higher.
+When considering trend, we expected an approximate 1-to-1 relationship between the two models, and instead we found a slightly less than 1-to-1 correspondence.
+That is to say, trends estimated from a point-level model tend to be slightly higher than trends estimated from a route-level model.
+In any case, because our overall goal of this paper was to incorporate detectability into the BBS trend model, our main point of comparison is between trends (and indices) produced by a model that includes detectability versus the status quo model currently used by the BBS.
+However, because we cannot directly include detectability into the route model, we needed to have the baseline point-level model as a proxy for the route-level indices and trends.
+We felt as though the point level model served as a good proxy in the case of the Ovenbird in Canada, but future studies should seek to include far more species and assess whether these metrics tend to hold for these other species. 
+
+\subsection{Incorporating Detectability Information into BBS Trend Estimates}
+
+\par We created two models that accounted for detectability.
+The model in Equation \ref{bbs-detect} only accounts for detectability and treats each estimate of detectability as a fixed point, whereas Equation \ref{bbs_varprop} incorporates information about the uncertainty around the estimated detection probabilities for each point.
+We were most interested in the model that incporates detectability as well as uncertainty, but we retained output from the detectability-only model as a basis for the variance propagation diagnostics.
 
 
 	\bibliography{refs}
