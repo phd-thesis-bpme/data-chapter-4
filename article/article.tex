@@ -284,7 +284,7 @@ If detectability is not accounted for, such as with the POINT model, we estimate
 
 \par In this paper, we described how to model BBS data at the point (or stop) level to produce trend estimates using similar model structure to current route-level trend estimates as in \citet{smith_spatially_2023}.
 We then expanded upon this point-level trend model by introducing a detectability term that allows for detection probability to explicitly be accounted for in BBS trend estimation.
-Because the detection probabilities are estimated based on data in a previous model \citep{edwards_point_2023}, we used a variance propagation technique put forth by \citet{bravington_variance_2021} to explicitly incorporate the deteciton probability error into the trend model.
+Because the detection probabilities are estimated based on data in a previous model \citep{edwards_point_2023}, we used a variance propagation technique put forth by \citet{bravington_variance_2021} to explicitly incorporate the detection probability error into the trend model.
 Finally, we applied these models in a case study by examining Ovenbird trends in Canada from 2010 - 2022, and assessed how these trends differ by accounting for detectability given changes in landcover over time.
 Here, we will mostly discuss the results of the Ovenbird case study and implications of the differences in trends between each of the models.
 However, we will suggest future avenues and applications of this extended BBS model, including implications for data integration.
@@ -304,8 +304,15 @@ We felt as though the point level model served as a good proxy in the case of th
 \subsection{Incorporating Detectability Information into BBS Trend Estimates}
 
 \par We created two models that accounted for detectability.
-The model in Equation \ref{bbs-detect} only accounts for detectability and treats each estimate of detectability as a fixed point, whereas Equation \ref{bbs_varprop} incorporates information about the uncertainty around the estimated detection probabilities for each point.
-We were most interested in the model that incporates detectability as well as uncertainty, but we retained output from the detectability-only model as a basis for the variance propagation diagnostics.
+The model in Equation \ref{bbs-detect} only accounts for detectability and treats each estimate of detectability as a fixed, true point, whereas Equation \ref{bbs_varprop} incorporates information about the uncertainty around the estimated detection probabilities for each point.
+We were most interested in the model that incorporates detectability as well as uncertainty, but we retained output from the detectability-only model as a basis for the variance propagation diagnostics.
+
+\par At the country-level, overall trend and trajectory of Ovenbird did not drastically change, but there was a slight decrease in the magnitude of the trend from the POINT model to the VARPROP model.
+That is, the VARPROP model estimated a trend of 0.82, with a 90\% credible interval of [0.26, 1.39], whereas the POINT model estimated a trend of 1.15, with a 90\% credible interval of [0.57, 1.73].
+The small change in the trend is not particularly unsurprising given that mean forest coverage change for each point was $-4.78 \times 10^{-3}$: on average, across the sampled Ovenbird points in Canada, forest coverage is not changing significantly.
+Thus, the effects of changes in landcover on the effects of detectability, combined with the fact that all of the sampled points are roadside surveys, effectively averages out to no change in trend on this broad scale.
+
+\par 
 
 
 	\bibliography{refs}
