@@ -91,5 +91,7 @@ write.table(x = varprop_summary, file = "output/varprop_summary.csv", sep = ",",
 
 png(filename = paste0("output/plots/varprop-diagnostics.png"),
     width = 6, height = 4, res = 600, units = "in")
-ggarrange(comp_plot, ggarrange(avail_plot, percept_plot, nrow = 2), nrow = 1)
+ggarrange(comp_plot, ggarrange(avail_plot, percept_plot, nrow = 2,
+                               labels = c("B", "C")), nrow = 1,
+          labels = "A")
 dev.off()

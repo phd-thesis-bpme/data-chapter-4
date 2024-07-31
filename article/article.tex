@@ -55,9 +55,10 @@ These data are then modelled as follows:
 Counts $Y$ for each route $J$ in stratum $i$, in year $t$ observed by observer $o$ are modelled as realizations of a negative binomial distribution with mean $\lambda_{J,i,t,o}$ and inverse dispersion parameter $\nu$ \citet{smith_spatially_2023}. 
 Note that we have explicitly chosen to use capital letter $J$ to represent the route, as this will be differentiated from specific points $j$ within a route $J$ later in this paper.
 On the log scale, values of $\lambda$ are modelled by intercepts representing mean count for each stratum ($\alpha_i$), route($\psi_J$), and observer ($\omega_o$), plus a temporal component $\delta_{i,t}$ that estimates population trajectory through time. 
-Since the temporal component is a smoothed GAM, we also add in an annual fluctuation term $\gamma_{i,t}$ to allow for fluctuations from the smooth. 
+Since the temporal component is a smoothed GAM \citep{smith_north_2021}, we also add in an annual fluctuation term $\gamma_{i,t}$ to allow for fluctuations from the smooth. 
 We also have a first-year observer term $\eta$ that is present if the route $J$ in year $t$ is run by observer $o$ for the first time, and is zero otherwise. 
 Finally, we also have a random noise term $\epsilon_{J,i,t,o}$.
+See \citet{smith_north_2021} and \citet{smith_spatially_2023} for discussions on prior selection for this model.
 
 \par To estimate annual population indices, we use the population index calculation used in \citet{smith_north_2021} to calculate indices of abundance at a stratified level:
 
@@ -468,25 +469,25 @@ as in Equation \ref{bbs_varprop}.
 
 \begin{figure}[h]
 	\includegraphics{../output/plots/route-vs-point.png}
-	\caption{TO DO}
+	\caption{Index of abundance (A) and trend (B) derived from POINT model versus ROUTE model. Each point in A represents an index of abundance for a stratum x year combination, whereas each point in B represents a trend estimate for a stratum. Regression lines (black) and posterior draws (grey) indicate modelled relationship.}
 	\label{fig:route-vs-point}
 \end{figure}
 
 \begin{figure}[h]
 	\includegraphics{../output/plots/varprop-diagnostics.png}
-	\caption{TO DO}
+	\caption{Diagnostics of variance propagation as suggested by \citet{bravington_variance_2021}. A) Index of abundance as derived from the DETECT model versus index of abundance as derived from the VARPROP model, for each stratum x year combination (points). Regression line (black) and posterior draws (grey) indicate modelled relationship. B) Variance propagation parameter posterior distributions for availability. Because we are using the ``best" NA-POPS removal model for Ovenbird, we only have parameter distributions for the Intercept, Ordinal Day, and Ordinal Day squared terms. C) Variance propagation parameter posterior distributions for perceptibility. Similar to B), because we are using the ``best" NA-POPS distance model for Ovenbird, we include distributions for the Intercept, Forest, Road, and interaction terms.}
 	\label{fig:varprop-diagnostics}
 \end{figure}
 
 \begin{figure}[h]
 	\includegraphics{../output/plots/trend-vs-forest.png}
-	\caption{TO DO}
+	\caption{Change in forest coverage versus difference in trend between the VARPROP and POINT models. Change in forest coverage was calculated as the difference between forest coverage in 2022 and 2010. Trend difference was calculated as the VARPROP trend minus the POINT trend. Regression line (black) and posterior draws (grey) indicate the modelled relationship.}
 	\label{fig:trend-vs-forest}
 \end{figure}
 
 \begin{figure}[h]
 	\includegraphics{../output/plots/route-level-change.png}
-	\caption{TO DO}
+	\caption{A) Map of forest coverage change from 2010 - 2022 at all Breeding Bird Survey points in Canada for Ovenbird. Inset is a particular route of interest in Ontario that has experienced significant forest coverage loss from 2010 - 2022. For this route, we compared the population trajectories of Ovenbird using the POINT model (B) to the population trajectories of Ovenbird using the VARPROP model (C) to assess differences in trend.}
 	\label{fig:route-change}
 \end{figure}
 
