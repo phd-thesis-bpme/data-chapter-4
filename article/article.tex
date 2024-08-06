@@ -1,41 +1,4 @@
-\documentclass[12pt]{article}
-
-\usepackage{setspace}
-\doublespacing
-
-\usepackage{natbib}
-\bibliographystyle{apalike}
-
-\usepackage[margin=1.0in]{geometry}
-
-\usepackage{amsmath}
-
-\usepackage{graphicx}
-
-\usepackage{lineno}
-\linenumbers
-
-%opening
-\title{A point-level trend model for the North American Breeding Bird Survey that corrects for detectability}
-\author{
-	Edwards, Brandon P.M.\\
-	\and
-	Johnston, Alison\\
-	\and
-	Miller, David L.\\
-	\and
-	Bennett, Joseph R.\\
-	\and
-	Smith, Adam C.\\
-}
-
-\begin{document}
-	
-	\maketitle
-	
-	%\begin{abstract}
-		
-%	\end{abstract}
+\chapter{A point-level trend model for the North American Breeding Bird Survey that corrects for detectability}
 	
 \section{Introduction}
 \par Data for the North American Breeding Bird Survey (BBS) have been collected since the 1960s when the BBS first started \citep{hudson_role_2017, sauer_first_2017}. 
@@ -395,10 +358,6 @@ However, we have clearly shown here how species trends can be drastically affect
 Thus, we implore agencies who manage the BBS to consider data management and data releases that include all information at the point level, including point locations and changes to point locations over the year.
 Only then can we truly have a mechanistic and holistic understanding of the interactions between the landscape, detectability, and the number of species that BBS observers are observing.
 
-
-
-	\bibliography{refs}
-
 \section{Appendix A Expanding on the Derivation of the BBS Model with Variance Propagation}
 
 \par As discussed in Section \ref{varprop-text}, we can expand the BBS model from Equation \ref{bbs-detect} to propagate forward the variance from detectability estimates, by adding in the variance propagation terms $	\log(pq) = log(\hat{p} \hat{q}) + \kappa^{(p)}\zeta + O(\zeta^2) + \kappa^{(q)}\xi + O(\xi^2)$.
@@ -461,34 +420,32 @@ as in Equation \ref{bbs_varprop}.
 
 \section{Figures}
 
-\begin{figure}[h!]
-	\includegraphics{../output/plots/OVEN-combined.png}
+\begin{figure}[h]
+	\includegraphics{../ch5-bbs-detectability/output/plots/OVEN-combined.png}
 	\caption{Canada-wide trends and trajectories for Ovenbird as derived from the status-quo route model in Equation \ref{bbs} and \citet{smith_spatially_2023} (top row), the point-level model as in Equation \ref{bbs-point} (middle row), and the point-level model that includes detectability and variance propagation as in Equation \ref{bbs_varprop} (bottom row). Note we have not included the DETECT model from Equation \ref{bbs-detect} as it was used mainly for comparison to the VARPROP model. Be aware of the differences in the y-axes for each of these models: the ROUTE y-axis is the annual index of abundance per route, the POINT y-axis is the annual index of abundance per point, and the VARPROP y-axis is the expended annual index of abundance per point given perfect detectability.}
 	\label{fig:oven-combined}
 \end{figure}
 
 \begin{figure}[h]
-	\includegraphics{../output/plots/route-vs-point.png}
+	\includegraphics{../ch5-bbs-detectability/output/plots/route-vs-point.png}
 	\caption{Index of abundance (A) and trend (B) derived from POINT model versus ROUTE model. Each point in A represents an index of abundance for a stratum x year combination, whereas each point in B represents a trend estimate for a stratum. Regression lines (black) and posterior draws (grey) indicate modelled relationship.}
 	\label{fig:route-vs-point}
 \end{figure}
 
 \begin{figure}[h]
-	\includegraphics{../output/plots/varprop-diagnostics.png}
+	\includegraphics{../ch5-bbs-detectability/output/plots/varprop-diagnostics.png}
 	\caption{Diagnostics of variance propagation as suggested by \citet{bravington_variance_2021}. A) Index of abundance as derived from the DETECT model versus index of abundance as derived from the VARPROP model, for each stratum x year combination (points). Regression line (black) and posterior draws (grey) indicate modelled relationship. B) Variance propagation parameter posterior distributions for availability. Because we are using the ``best" NA-POPS removal model for Ovenbird, we only have parameter distributions for the Intercept, Ordinal Day, and Ordinal Day squared terms. C) Variance propagation parameter posterior distributions for perceptibility. Similar to B), because we are using the ``best" NA-POPS distance model for Ovenbird, we include distributions for the Intercept, Forest, Road, and interaction terms.}
 	\label{fig:varprop-diagnostics}
 \end{figure}
 
 \begin{figure}[h]
-	\includegraphics{../output/plots/trend-vs-forest.png}
+	\includegraphics{../ch5-bbs-detectability/output/plots/trend-vs-forest.png}
 	\caption{Change in forest coverage versus difference in trend between the VARPROP and POINT models. Change in forest coverage was calculated as the difference between forest coverage in 2022 and 2010. Trend difference was calculated as the VARPROP trend minus the POINT trend. Regression line (black) and posterior draws (grey) indicate the modelled relationship.}
 	\label{fig:trend-vs-forest}
 \end{figure}
 
 \begin{figure}[h]
-	\includegraphics{../output/plots/route-level-change.png}
+	\includegraphics{../ch5-bbs-detectability/output/plots/route-level-change.png}
 	\caption{A) Map of forest coverage change from 2010 - 2022 at all Breeding Bird Survey points in Canada for Ovenbird. Inset is a particular route of interest in Ontario that has experienced significant forest coverage loss from 2010 - 2022. For this route, we compared the population trajectories of Ovenbird using the POINT model (B) to the population trajectories of Ovenbird using the VARPROP model (C) to assess differences in trend.}
 	\label{fig:route-change}
 \end{figure}
-
-\end{document}
